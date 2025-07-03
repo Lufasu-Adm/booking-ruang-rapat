@@ -1,0 +1,124 @@
+/* Base styles */
+html {
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: #306199;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Shared container styles for login & register */
+.login-card,
+.register-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 28rem; /* 448px */
+  margin: 10vh auto 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Shared title styles */
+.login-title,
+.register-title {
+  color: #1f2937; /* gray-800 */
+  font-size: 1.875rem; /* 30px */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Input fields */
+.form-input,
+.register-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  background-color: white;
+  color: #1f2937; /* gray-800 */
+}
+
+.form-input::placeholder,
+.register-input::placeholder {
+  color: #6b7280; /* gray-500 */
+}
+
+.form-input:focus,
+.register-input:focus {
+  outline: none;
+  border-color: #3b82f6; /* blue-500 */
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+/* Buttons */
+.form-button,
+.register-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #306199;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-button:hover,
+.register-button:hover {
+  background-color: #254d77;
+}
+
+/* Footer (login/register) */
+.form-footer {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280; /* gray-500 */
+}
+
+.form-footer a {
+  color: #306199;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Flash messages */
+.flash-message {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.flash-message-success {
+  color: #16a34a; /* green-600 */
+}
+
+.flash-message-error {
+  color: #dc2626; /* red-600 */
+}
+
+/* Alert boxes (optional) */
+.alert-success {
+  background-color: #d1fae5; /* green-100 */
+  color: #065f46; /* green-800 */
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background-color: #fee2e2; /* red-100 */
+  color: #991b1b; /* red-800 */
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
