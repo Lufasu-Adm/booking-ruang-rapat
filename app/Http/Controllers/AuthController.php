@@ -12,7 +12,7 @@ class AuthController extends Controller
     public function showRegister()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return $this->redirectByRole();
         }
         return view('register');
     }
@@ -24,6 +24,7 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
+            'division_id' => 'required|exists:divisions,id',
         ]);
 
         $validated['password'] = bcrypt($validated['password']);
@@ -38,7 +39,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            return $this->redirectByRole();
         }
         return view('login');
     }
@@ -48,12 +49,12 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard')); // FIXED: arahkan ke dashboard
+            return $this->redirectByRole();
         }
 
         return back()->with('error', 'Email atau password salah');
@@ -66,5 +67,19 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    // Fungsi bantu: arahkan sesuai role
+    public function redirectByRole()
+    {
+        $role = auth()->user()->role;
+
+        if ($role === 'super_admin') {
+            return redirect()->route('superadmin.dashboard');
+        } elseif ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 }

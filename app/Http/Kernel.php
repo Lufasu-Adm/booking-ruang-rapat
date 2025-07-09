@@ -43,7 +43,8 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
-        'admin' => \App\Http\Middleware\AdminOnly::class,  
+        'adminonly' => \App\Http\Middleware\AdminOnly::class,  
+        'superadminonly' => \App\Http\Middleware\SuperAdminOnly::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];

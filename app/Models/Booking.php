@@ -15,18 +15,33 @@ class Booking extends Model
         'date',
         'start_time',
         'end_time',
-        'status'
+        'division_id',
+        'department',
+        'status',
+        'pic_user_id'
     ];
 
-    // Relasi ke User
+    // Relasi ke user peminjam
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke Room
+    // Relasi ke ruangan
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    // Relasi ke PIC (admin/user yang bertanggung jawab)
+    public function pic()
+    {
+        return $this->belongsTo(User::class, 'pic_user_id');
+    }
+
+    // Relasi ke divisi peminjam
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
     }
 }

@@ -2,50 +2,41 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class DummyBookingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Ambil user dan room by email/nama (tidak hardcode id)
-        $budi = \DB::table('users')->where('email', 'budi@user.com')->first();
-        $siti = \DB::table('users')->where('email', 'siti@user.com')->first();
-        $utama = \DB::table('rooms')->where('name', 'Ruang Rapat Utama')->first();
-        $meeting1 = \DB::table('rooms')->where('name', 'Ruang Meeting 1')->first();
+        // $users = DB::table('users')->where('role', 'user')->get();
+        // $admins = DB::table('users')->where('role', 'admin')->get()->keyBy('division_id');
+        // $rooms = DB::table('rooms')->get();
 
-        if ($budi && $utama) {
-            \DB::table('bookings')->insertOrIgnore([
-                [
-                    'user_id' => $budi->id,
-                    'room_id' => $utama->id,
-                    'date' => now()->format('Y-m-d'),
-                    'start_time' => '09:00',
-                    'end_time' => '10:00',
-                    'status' => 'approved',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            ]);
-        }
-        if ($siti && $meeting1) {
-            \DB::table('bookings')->insertOrIgnore([
-                [
-                    'user_id' => $siti->id,
-                    'room_id' => $meeting1->id,
-                    'date' => now()->addDay()->format('Y-m-d'),
-                    'start_time' => '14:00',
-                    'end_time' => '15:00',
-                    'status' => 'pending',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]
-            ]);
-        }
+        // $statuses = ['pending', 'approved', 'rejected'];
+        // $bookings = [];
+
+        // foreach ($users as $i => $user) {
+        //     // Ambil satu ruangan dari divisi berbeda
+        //     $room = $rooms->firstWhere('division_id', '!=', $user->division_id);
+
+        //     if ($room) {
+        //         $bookings[] = [
+        //             'user_id' => $user->id,
+        //             'room_id' => $room->id,
+        //             'division_id' => $user->division_id,
+        //             'pic_user_id' => $admins[$room->division_id]->id ?? null,
+        //             'date' => now()->addDays($i)->format('Y-m-d'),
+        //             'start_time' => '10:00',
+        //             'end_time' => '11:00',
+        //             'status' => $statuses[array_rand($statuses)],
+        //             'department' => 'Departemen A',
+        //             'created_at' => now(),
+        //             'updated_at' => now(),
+        //         ];
+        //     }
+        // }
+
+        // DB::table('bookings')->insertOrIgnore($bookings);
     }
 }

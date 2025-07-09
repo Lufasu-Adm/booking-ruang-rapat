@@ -1,0 +1,209 @@
+/* ============================= */
+/* ========= BASE ADMIN ======== */
+/* ============================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  background-color: #306199;
+  color: white;
+  box-sizing: border-box;
+  background-attachment: fixed;
+  overflow-y: auto;
+}
+
+/* ============================= */
+/* ========== DASHBOARD ======== */
+/* ============================= */
+.dashboard-wrapper {
+  min-height: 100vh;
+  background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+.dashboard-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 1;
+  padding: 20rem 2rem 4rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin-top: -15rem;
+}
+
+.booking-form-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 2rem;
+  padding: 3rem 4rem;
+  color: #1f2937;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================= */
+/* ======== HEADER & LOGOUT ==== */
+/* ============================= */
+.user-header {
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  font-size: 0.85rem;
+}
+
+.logout-wrapper {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.logout-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #770000;
+}
+
+/* ============================= */
+/* ======== BIG BUTTONS ======== */
+/* ============================= */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 15vh;
+}
+
+.dashboard-button {
+  background-color: white;
+  color: #306199;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  padding: 2rem 4rem;
+  border-radius: 1.5rem;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-button:hover {
+  background-color: #aaaaaa;
+}
+
+/* ============================= */
+/* ========== TABLE ============ */
+/* ============================= */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  color: #1f2937;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table th {
+  background-color: #306199;
+  color: white;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.admin-table tr:nth-child(even) td {
+  background-color: #f9fafb;
+}
+
+.admin-table tr:hover td {
+  background-color: #e0e7ff;
+}
+
+/* ============================= */
+/* ========== BUTTONS ========== */
+/* ============================= */
+.btn {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-blue {
+  background-color: #306199;
+  color: white;
+}
+
+.btn-blue:hover {
+  background-color: #254d77;
+}
+
+.btn-red {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-red:hover {
+  background-color: #991b1b;
+}
+
+.btn-gray {
+  background-color: #9ca3af;
+  color: white;
+}
+
+.btn-gray:hover {
+  background-color: #6b7280;
+}
+
+/* ============================= */
+/* ====== FLASH MESSAGES ======= */
+/* ============================= */
+.flash-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.flash-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}

@@ -7,6 +7,7 @@
     @vite('resources/css/app.css')
 </head>
 <body>
+<body class="page-login" style="background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed; background-size: cover;">
 
     <div class="register-container">
         <div class="register-title">Register</div>

@@ -4,21 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Booking;
+use App\Models\Division;
 
 class Room extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',       // nama ruangan
-        'capacity',   // kapasitas
-        'location',   // lokasi (optional, kalau ada)
-        'description' // deskripsi (optional)
+        'name',
+        'capacity',
+        'location',
+        'description',
+        'is_available',
+        'division_id',
     ];
 
-    // Relasi ke Booking
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
     }
 }
