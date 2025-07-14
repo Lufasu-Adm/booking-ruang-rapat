@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Tambah Ruangan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css')
+    @vite('resources/css/admin.css')
 </head>
 
 <body class="bg">
@@ -57,7 +57,7 @@
             </select>
 
             <button type="submit" class="form-button">Simpan</button>
-            <a href="{{ route('rooms.index') }}" class="form-footer" style="display:block; text-align:center; margin-top:1rem;">← Kembali</a>
+            <a href="{{ route('admin.rooms') }}" class="form-footer" style="display:block; text-align:center; margin-top:1rem;">← Kembali</a>
         </form>
     </div>
 

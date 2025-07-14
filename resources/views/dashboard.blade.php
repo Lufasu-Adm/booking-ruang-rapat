@@ -12,9 +12,14 @@
 
     {{-- Navbar --}}
     @auth
+      @php
+        $name = auth()->user()->name;
+        $cleanName = preg_replace('/^(USER|ADMIN|SUPERADMIN)\s+/i', '', $name);
+      @endphp
+
       <nav class="navbar">
         <div class="navbar-left">
-          <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
+          <p>Welcome, <strong>{{ strtoupper($cleanName) }}</strong></p>
           <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
         </div>
 
@@ -23,7 +28,6 @@
           <a href="{{ route('booking.create') }}" class="{{ request()->is('booking/create') ? 'active' : '' }}">Booking</a>
           <a href="{{ route('rooms.index') }}" class="{{ request()->is('rooms') ? 'active' : '' }}">Room List</a>
           <a href="{{ route('bookings.index') }}" class="{{ request()->is('bookings') ? 'active' : '' }}">History</a>
-          
         </div>
 
         <div class="navbar-right">
@@ -52,31 +56,30 @@
             <p>Manage and monitor your meeting room bookings</p>
           </header>
 
-{{-- Left & Right Layout --}}
-<section class="dashboard-summary">
-  <div class="summary-left">
-    <div class="card yellow">
-      <h3>Total Rooms</h3>
-      <p>{{ $totalRooms ?? 0 }} Rooms</p>
-    </div>
-    <div class="card blue">
-      <h3>Total Bookings</h3>
-      <p>{{ $totalBookings ?? 0 }} Bookings</p>
-    </div>
-    <div class="card green">
-      <h3>Active Bookings</h3>
-      <p>{{ $activeBookings ?? 0 }} Active</p>
-    </div>
-  </div>
-  <div class="summary-right">
-    <div class="card date-time">
-      <p>{{ \Carbon\Carbon::now()->translatedFormat('l') }}</p>
-      <h2>{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</h2>
-      <h1 id="live-time">{{ \Carbon\Carbon::now()->format('H:i') }}</h1>
-    </div>
-  </div>
-</section>
-
+          {{-- Left & Right Layout --}}
+          <section class="dashboard-summary">
+            <div class="summary-left">
+              <div class="card yellow">
+                <h3>Total Rooms</h3>
+                <p>{{ $totalRooms ?? 0 }} Rooms</p>
+              </div>
+              <div class="card blue">
+                <h3>Total Bookings</h3>
+                <p>{{ $totalBookings ?? 0 }} Bookings</p>
+              </div>
+              <div class="card green">
+                <h3>Active Bookings</h3>
+                <p>{{ $activeBookings ?? 0 }} Active</p>
+              </div>
+            </div>
+            <div class="summary-right">
+              <div class="card date-time">
+                <p>{{ \Carbon\Carbon::now()->translatedFormat('l') }}</p>
+                <h2>{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</h2>
+                <h1 id="live-time">{{ \Carbon\Carbon::now()->format('H:i') }}</h1>
+              </div>
+            </div>
+          </section>
 
           {{-- Tabel Booking Dihilangkan --}}
           {{-- <div class="booking-table-container"> ... </div> --}}
@@ -85,22 +88,22 @@
     </div>
 
     <script>
-  function updateTime() {
-    const now = new Date();
-    const jam = now.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    });
-    const jamElement = document.getElementById("live-time");
-    if (jamElement) {
-      jamElement.textContent = jam;
-    }
-  }
+      function updateTime() {
+        const now = new Date();
+        const jam = now.toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        });
+        const jamElement = document.getElementById("live-time");
+        if (jamElement) {
+          jamElement.textContent = jam;
+        }
+      }
 
-  setInterval(updateTime, 1000);
-  updateTime();
-</script>
+      setInterval(updateTime, 1000);
+      updateTime();
+    </script>
 
   </body>
 </html>

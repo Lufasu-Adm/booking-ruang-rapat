@@ -12,9 +12,9 @@
   @endif
 </head>
 
-<body class="page-roomlist">
-  <div class="dashboard-wrapper" style="background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center; background-size: cover;">
-  @auth
+<body class="page-roomlist" style="margin:0; padding:0; min-height:100vh; background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed; background-size: cover; overflow-x: hidden; overflow-y: auto;">
+  <div class="dashboard-wrapper">
+    @auth
     <nav class="navbar">
       <div class="navbar-left">
         <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
@@ -30,9 +30,8 @@
         <a href="{{ route('dashboard') }}" class="back-button-navbar">BACK</a>
       </div>
     </nav>
-  @endauth
+    @endauth
 
-  <div class="dashboard-wrapper">
     <div class="dashboard-content">
       <div class="booking-form-wrapper">
         <h2 class="booking-title">Room List</h2>
@@ -50,22 +49,23 @@
         @endif
 
         <form method="GET" action="{{ route('rooms.index') }}" class="division-filter-form">
-  <label for="division_id">Filter by Division:</label>
-  <select name="division_id" id="division_id" onchange="this.form.submit()">
-    <option value="">-- All Divisions --</option>
-    @foreach($divisions as $division)
-      <option value="{{ $division->id }}" {{ (isset($selectedDivision) && $selectedDivision == $division->id) ? 'selected' : '' }}>
-        {{ $division->name }}
-      </option>
-    @endforeach
-  </select>
-</form>
-
+          <label for="division_id">Filter by Division:</label>
+          <select name="division_id" id="division_id" onchange="this.form.submit()">
+            <option value="">-- All Divisions --</option>
+            @foreach($divisions as $division)
+              <option value="{{ $division->id }}" {{ (isset($selectedDivision) && $selectedDivision == $division->id) ? 'selected' : '' }}>
+                {{ $division->name }}
+              </option>
+            @endforeach
+          </select>
+        </form>
 
         <div class="booking-room-button-wrapper">
           <a href="{{ url('/booking/create') }}" class="form-button full-width">BOOKING ROOM</a>
         </div>
 
+        {{-- TABEL HANYA MUNCUL JIKA FILTER DIPILIH --}}
+        @if(request()->has('division_id') && request()->division_id != '')
         <table class="booking-table">
           <thead>
             <tr>
@@ -114,6 +114,7 @@
             @endforelse
           </tbody>
         </table>
+        @endif {{-- END IF division selected --}}
       </div>
     </div>
   </div>

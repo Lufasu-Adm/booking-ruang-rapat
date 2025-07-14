@@ -2,62 +2,90 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Ruangan</title>
+    <title>Kelola Ruangan</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite('resources/css/admin.css')
 </head>
-<body class="bg">
+<body>
 
-    <div class="dashboard-wrapper">
-        <!-- Header -->
-        <div class="user-header">
+    <nav class="navbar">
+        <div class="navbar-user-info">
             <p>Selamat Datang, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
-            <p>Role: <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
+            <p>Anda adalah <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
         </div>
-
-        <h2 style="text-align:center; margin-bottom: 2rem;">Daftar Ruangan</h2>
-
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Kapasitas</th>
-                    <th>Deskripsi</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($rooms as $room)
-                <tr>
-                    <td>{{ $room->name }}</td>
-                    <td>{{ $room->capacity }}</td>
-                    <td>{{ $room->description }}</td>
-                    <td>
-                        @if($room->is_available)
-                            <span class="status-approved">Available</span>
-                        @else
-                            <span class="status-rejected">Unavailable</span>
-                        @endif
-                    </td>
-                    <td>
-                        <a href="{{ route('rooms.edit', $room->id) }}" class="form-button" style="padding: 0.5rem 1rem; text-decoration: none;">Edit</a>
-                        <form method="POST" action="{{ route('rooms.destroy', $room->id) }}" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="logout-button" style="padding: 0.5rem 1rem;">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <div class="booking-footer">
-            <a href="{{ route('rooms.create') }}" class="form-button" style="width: auto;">+ Tambah Ruangan</a>
-            <br><br>
-            <a href="{{ route('admin.dashboard') }}" class="back-button-navbar">← Kembali ke Dashboard</a>
+        <div class="navbar-title">
+           
         </div>
+        
+        <div class="navbar-user-actions">
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-sm">Kembali</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="content-container">
+
+            <div class="page-header">
+                <h2>Kelola Ruangan</h2>
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('rooms.create') }}" class="btn btn-primary">+ Tambah Ruangan</a>
+                @endif
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Kapasitas</th>
+                        <th>Deskripsi</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($rooms as $room)
+                    <tr>
+                        <td>{{ $room->name }}</td>
+                        <td>{{ $room->capacity }} orang</td>
+                        <td>{{ $room->description }}</td>
+                        <td>
+                            @if ($room->is_available)
+                                <span class="status status-available">Available</span>
+                            @else
+                                <span class="status status-unavailable">Unavailable</span>
+                            @endif
+                        </td>
+                        <td class="action-cell">
+                            @if(auth()->user()->role === 'admin')
+                                <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Edit</a>
+                                <form method="POST" action="{{ route('rooms.destroy', $room->id) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus ruangan ini?')">Hapus</button>
+                                </form>
+                            @else
+                                <span>-</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray-text);">
+                            Belum ada data ruangan yang tersedia.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            </div>
     </div>
 
 </body>

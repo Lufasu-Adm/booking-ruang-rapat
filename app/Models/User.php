@@ -17,7 +17,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'division_id', // ✅ supaya bisa mass assignment
+        'division_id', 
     ];
 
     protected $hidden = [

@@ -42,7 +42,7 @@ class RoomController extends Controller
     {
         $user = Auth::user();
 
-        $divisions = $user->role === 'super admin'
+        $divisions = $user->role === 'admin'
             ? Division::all()
             : Division::where('id', $user->division_id)->get();
 
@@ -54,6 +54,10 @@ class RoomController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->role !== 'admin') {
+        abort(403, 'Hanya admin yang dapat menyimpan ruangan.');
+    }
+
         $validated = $request->validate([
             'name' => 'required|unique:rooms',
             'description' => 'nullable|string',
@@ -62,8 +66,10 @@ class RoomController extends Controller
             'location' => 'nullable|string|max:255',
         ]);
 
+        $validated['division_id'] = $user->division_id;
+
         // Tetapkan division_id berdasarkan role
-        if ($user->role === 'super admin') {
+        if ($user->role === 'admin') {
             $validated['division_id'] = $request->validate([
                 'division_id' => 'required|exists:divisions,id',
             ])['division_id'];
@@ -85,7 +91,7 @@ class RoomController extends Controller
             abort(403, 'Anda tidak boleh mengedit ruangan dari divisi lain.');
         }
 
-        $divisions = $user->role === 'super admin'
+        $divisions = $user->role === 'admin'
             ? Division::all()
             : Division::where('id', $user->division_id)->get();
 
@@ -109,7 +115,7 @@ class RoomController extends Controller
             'location' => 'nullable|string|max:255',
         ]);
 
-        if ($user->role === 'super admin') {
+        if ($user->role === 'admin') {
             $validated['division_id'] = $request->validate([
                 'division_id' => 'required|exists:divisions,id',
             ])['division_id'];

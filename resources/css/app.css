@@ -462,6 +462,8 @@ a {
 
 .booking-room-button-wrapper {
   margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  margin-right: 3rem;
 }
 
 .full-width {
@@ -481,6 +483,17 @@ a {
   padding: 0.6rem 2rem;
   margin-top: 1rem;
 }
+
+.form-button-wrapper .form-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.full-width {
+  width: 100%;
+}
+
 
 /* ============================ */
 /* ========== NAVBAR ========== */
@@ -716,11 +729,14 @@ body.page-roomlist,
 html.page-roomlist {
   margin: 0;
   padding: 0;
-  height: 100%;
+  min-height: 100vh;
+  background: url('assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
   background-size: cover;
+  background-attachment: fixed;
+  overflow-x: hidden;
   overflow-y: auto;
-  margin-top: -8rem;
 }
+
 
 .page-roomlist .dashboard-wrapper {
   display: flex;
@@ -748,13 +764,19 @@ html.page-roomlist {
 .page-roomlist .dashboard-content {
   position: relative;
   z-index: 1;
-  flex: 1;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 2rem;
   box-sizing: border-box;
+  overflow: visible;
+
+  /* HAPUS atau KOMENTAR BARIS INI jika ada: */
+  /* background-color: rgba(255, 255, 255, 0.95); */
 }
+
+
 
 /* Styling untuk tabel */
 .page-roomlist .booking-table {
@@ -764,6 +786,7 @@ html.page-roomlist {
   overflow: hidden;
   margin-top: 1rem;
   box-sizing: border-box;
+  background-color: transparent;
 }
 
 .page-roomlist .booking-table th {
@@ -926,14 +949,7 @@ body.page-book .flash-message-error {
 /* ==== BOOKING HISTORY ==== */
 /* ========================== */
 
-html.page-roomlist, body.page-roomlist {
-  margin: 0;
-  padding: 0;
-  height: 100%; /* Pastikan body dan html mengisi 100% dari tinggi layar */
-  background-attachment: fixed;
-  background-size: cover; /* Pastikan gambar latar menutupi seluruh layar */
-  background-position: center center; /* Menjaga posisi latar tetap terpusat */
-}
+
 
 body.page-history .dashboard-wrapper {
   min-height: 100vh;

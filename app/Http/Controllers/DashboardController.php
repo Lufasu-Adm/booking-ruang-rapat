@@ -7,12 +7,20 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Room;
 use App\Models\Booking;
 use Carbon\Carbon;
+use App\Models\Division;
 
 class DashboardController extends Controller
 {
     /**
      * Tampilkan halaman dashboard.
      */
+
+    public function adminDashboard()
+    {
+    $divisions = Division::all();
+    return view('admin.dashboard-admin', compact('divisions'));
+    }
+    
     public function index()
     {
         $user = Auth::user();

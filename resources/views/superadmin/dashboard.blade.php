@@ -1,70 +1,83 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Super Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  @vite('resources/css/superadmin.css')
+    <meta charset="UTF-8">
+    <title>Super Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite('resources/css/superadmin.css')
 </head>
-
 <body class="page-superadmin">
-  <div class="dashboard-wrapper" style="background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center; background-size: cover;">
+<div class="dashboard-wrapper">
     <nav class="navbar">
-      <div class="navbar-left">
-        <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
-        <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
-      </div>
-      <div class="navbar-middle">
-        <a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
-      </div>
-      <div class="navbar-right">
-        {{-- Tombol BACK --}}
-        <a href="{{ route('superadmin.dashboard') }}" class="back-button-navbar">BACK</a>
-
-        {{-- Tombol Logout --}}
-        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-          @csrf
-          <button type="submit" class="logout-button-navbar">Logout</button>
-        </form>
-      </div>
+        <div class="navbar-left">
+            <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
+            <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
+        </div>
+        <div class="navbar-middle">
+            <a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="navbar-button">Logout</button>
+            </form>
+        </div>
     </nav>
 
-    <div class="dashboard-content">
-      <h2 class="booking-title">Super Admin Panel</h2>
-
-      <a href="{{ url('/divisions/create') }}" class="form-button primary">+ Add New Division</a>
-
-      <div class="booking-form-wrapper">
-        <table class="booking-table">
-          <thead>
-            <tr>
-              <th>Division</th>
-              <th>Admin</th>
-              <th>User</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($divisions as $division)
-              <tr>
-                <td>{{ $division->name }}</td>
-                <td>
-                  @php
-                    $admin = $division->users->where('role', 'admin')->first();
-                  @endphp
-                  {{ $admin ? $admin->name . ' (' . $admin->email . ')' : '-' }}
-                </td>
-                <td>
-                  @php
-                    $user = $division->users->where('role', 'user')->first();
-                  @endphp
-                  {{ $user ? $user->name . ' (' . $user->email . ')' : '-' }}
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
+    <div class="content-card">
+        <div class="card-header">
+            <h2>Super Admin Panel</h2>
+            <a href="{{ url('/divisions/create') }}" class="add-button">+ Tambah Divisi</a>
+        </div>
+        <div class="card-body">
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Nama Divisi</th>
+                        <th>Admin</th>
+                        <th>User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($divisions as $division)
+                    <tr>
+                        <td data-label="Divisi">{{ $division->name }}</td>
+                        <td data-label="Admin">
+                            @php $admin = $division->users->where('role', 'admin')->first(); @endphp
+                            @if($admin)
+                                <div class="user-cell">
+                                    <div class="name">{{ $admin->name }}</div>
+                                    <div class="email">{{ $admin->email }}</div>
+                                </div>
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td data-label="User">
+                             @php $user = $division->users->where('role', 'user')->first(); @endphp
+                             @if($user)
+                                <div class="user-cell">
+                                    <div class="name">{{ $user->name }}</div>
+                                    <div class="email">{{ $user->email }}</div>
+                                </div>
+                             @else
+                                -
+                             @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding: 2rem;">Belum ada divisi yang dibuat.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
+</div>
+
 </body>
 </html>

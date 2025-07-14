@@ -45,23 +45,24 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('aut
 | DASHBOARD ADMIN
 |--------------------------------------------------------------------------
 */
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard-admin');
-})->middleware(['auth', AdminOnly::class])->name('admin.dashboard');
+Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])
+    ->middleware(['auth', AdminOnly::class])
+    ->name('admin.dashboard');
 
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD SUPER ADMIN
 |--------------------------------------------------------------------------
 */
-Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])
-    ->middleware(['auth', SuperAdminOnly::class]) // gunakan nama string middleware
-    ->name('superadmin.dashboard');
-
-// SUPER ADMIN: Manajemen Divisi
 Route::middleware(['auth', SuperAdminOnly::class])->group(function () {
+    Route::get('/superadmin/dashboard', [SuperAdminController::class, 'index'])->name('superadmin.dashboard');
+
+    // Divisi CRUD
     Route::get('/divisions/create', [SuperAdminController::class, 'create'])->name('divisions.create');
     Route::post('/divisions', [SuperAdminController::class, 'store'])->name('divisions.store');
+    Route::get('/divisions/{id}/edit', [SuperAdminController::class, 'edit'])->name('divisions.edit');
+    Route::put('/divisions/{id}', [SuperAdminController::class, 'update'])->name('divisions.update');
+    Route::delete('/divisions/{id}', [SuperAdminController::class, 'destroy'])->name('divisions.destroy');
 });
 
 /*
@@ -69,16 +70,14 @@ Route::middleware(['auth', SuperAdminOnly::class])->group(function () {
 | MANAJEMEN RUANGAN
 |--------------------------------------------------------------------------
 */
-// USER melihat daftar ruangan
+// USER melihat ruangan
 Route::middleware('auth')->group(function () {
     Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
-    // Halaman filter ruangan berdasarkan divisi (dengan dropdown)
     Route::get('/rooms/filter', [RoomController::class, 'filterByDivision'])->name('rooms.filter');
-
 });
 
-// SUPER ADMIN: CRUD ruangan
-Route::middleware(['auth', 'superadminonly'])->group(function () {
+// SUPER ADMIN CRUD
+Route::middleware(['auth', AdminOnly::class])->group(function () {
     Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
     Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
     Route::get('/rooms/{room}/edit', [RoomController::class, 'edit'])->name('rooms.edit');
@@ -86,37 +85,34 @@ Route::middleware(['auth', 'superadminonly'])->group(function () {
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 });
 
-// ADMIN: hanya melihat ruangan divisinya
+// ADMIN melihat ruangan divisinya
 Route::get('/admin/rooms', [RoomController::class, 'adminIndex'])
     ->middleware(['auth', AdminOnly::class])
     ->name('admin.rooms');
 
 /*
 |--------------------------------------------------------------------------
-| BOOKING UNTUK USER
+| BOOKING
 |--------------------------------------------------------------------------
 */
+// USER
 Route::middleware('auth')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/booking/create', [BookingController::class, 'create'])->name('booking.create');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 });
 
-/*
-|--------------------------------------------------------------------------
-| BOOKING UNTUK ADMIN
-|--------------------------------------------------------------------------
-*/
+// ADMIN
 Route::middleware(['auth', AdminOnly::class])->group(function () {
     Route::get('/admin/bookings', [BookingController::class, 'all'])->name('admin.bookings');
     Route::patch('/admin/bookings/{id}/approve', [BookingController::class, 'approve'])->name('admin.bookings.approve');
     Route::patch('/admin/bookings/{id}/reject', [BookingController::class, 'reject'])->name('admin.bookings.reject');
 });
 
-// API: Ambil daftar ruangan berdasarkan division_id
+// API
 Route::get('/api/rooms/by-division/{divisionId}', function ($divisionId) {
     return \App\Models\Room::where('division_id', $divisionId)
         ->where('is_available', true)
-        ->select('id', 'name', 'capacity') // cukup data yang dibutuhkan
+        ->select('id', 'name', 'capacity')
         ->get();
-})->middleware('auth');
+})->middleware('auth')->name('api.rooms.byDivision');
