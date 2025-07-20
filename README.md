@@ -6,7 +6,6 @@
 
 Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel untuk memfasilitasi proses pemesanan ruang rapat di sebuah organisasi. Aplikasi ini dirancang dengan sistem multi-peran (multi-role) untuk mengatur hak akses yang berbeda bagi setiap pengguna.
 
-![Tampilan Dashboard Super Admin](https://i.imgur.com/g0t5vXQ.jpeg)
 
 ---
 
