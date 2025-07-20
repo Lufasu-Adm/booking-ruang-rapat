@@ -6,6 +6,7 @@
 
 Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel untuk memfasilitasi proses pemesanan ruang rapat di sebuah organisasi. Aplikasi ini dirancang dengan sistem multi-peran (multi-role) untuk mengatur hak akses yang berbeda bagi setiap pengguna.
 
+![Tampilan Dashboard Super Admin](https://i.imgur.com/g0t5vXQ.jpeg)
 
 ---
 
@@ -13,24 +14,21 @@ Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel
 
 Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajemen dan pemesanan ruangan, antara lain:
 
-* **Autentikasi Multi-Peran**: Sistem login yang aman dengan tiga tingkat hak akses:
+* **Autentikasi Multi-Peran**: Sistem login yang aman dengan dua tingkat hak akses:
+    * **Admin**: Memiliki kontrol penuh atas semua divisi, pengguna, ruangan, serta dapat menyetujui booking dan membuat laporan rekapitulasi dari semua divisi.
     * **User**: Dapat melakukan pemesanan ruangan dan melihat riwayat booking pribadi.
-    * **Admin Divisi**: Mengelola ruangan milik divisinya, menyetujui atau menolak booking, dan membuat rekap laporan untuk divisinya sendiri.
-    * **Super Admin**: Memiliki kontrol penuh atas semua divisi, admin, dan dapat membuat laporan rekapitulasi dari semua divisi.
 * **Manajemen Booking**:
     * Formulir pemesanan dengan pilihan tanggal dan jam.
     * Pengecekan jadwal yang tumpang tindih (overlap) untuk mencegah booking ganda.
-    * Sistem persetujuan (approval) oleh Admin Divisi.
+    * Sistem persetujuan (approval) oleh Admin.
 * **Manajemen Ruangan & Divisi**:
-    * Super Admin dapat menambah, mengubah, dan menghapus divisi.
-    * Admin Divisi dapat menambah dan mengelola data ruangan yang menjadi tanggung jawabnya.
+    * Admin dapat menambah, mengubah, dan menghapus divisi serta ruangan.
 * **Laporan PDF Dinamis**:
     * Fitur untuk membuat laporan rekapitulasi booking dalam format PDF.
     * Filter laporan berdasarkan rentang tanggal.
-    * Hak akses laporan yang disesuaikan: Admin hanya melihat data divisinya, Super Admin melihat semua.
-    * Untuk Super Admin, laporan PDF akan menampilkan data yang dikelompokkan dengan **tabel terpisah untuk setiap divisi**, membuatnya sangat rapi dan mudah dibaca.
+    * Laporan PDF menampilkan data yang dikelompokkan dengan **tabel terpisah untuk setiap divisi**, membuatnya sangat rapi dan mudah dibaca.
 
-
+![Tampilan Halaman Filter](https://i.imgur.com/f9G4dYm.png)
 
 ---
 
@@ -100,14 +98,11 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal A
 
 Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda sudah membuatnya melalui seeder atau registrasi manual):
 
-* **Super Admin**:
+* **SuperAdmin**:
     * **Email**: `superadmin@example.com`
     * **Password**: `password`
-* **Admin Divisi**:
-    * **Email**: `admin.divisi@example.com`
-    * **Password**: `password`
 * **User Biasa**:
-    * **Email**: `user@example.com`
+    * **Email**: `kapal_perangr@example.com`
     * **Password**: `password`
 
 ---
