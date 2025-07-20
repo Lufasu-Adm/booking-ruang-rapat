@@ -30,7 +30,7 @@ Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajeme
     * Hak akses laporan yang disesuaikan: Admin hanya melihat data divisinya, Super Admin melihat semua.
     * Untuk Super Admin, laporan PDF akan menampilkan data yang dikelompokkan dengan **tabel terpisah untuk setiap divisi**, membuatnya sangat rapi dan mudah dibaca.
 
-![Tampilan Halaman Filter](https://i.imgur.com/f9G4dYm.png)
+
 
 ---
 
