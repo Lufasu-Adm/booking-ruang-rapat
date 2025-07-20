@@ -1,61 +1,122 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Booking Ruang Rapat
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-## About Laravel
+Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel untuk memfasilitasi proses pemesanan ruang rapat di sebuah organisasi. Aplikasi ini dirancang dengan sistem multi-peran (multi-role) untuk mengatur hak akses yang berbeda bagi setiap pengguna.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Tampilan Dashboard Super Admin](https://i.imgur.com/g0t5vXQ.jpeg)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Fitur Utama
 
-## Learning Laravel
+Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajemen dan pemesanan ruangan, antara lain:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Autentikasi Multi-Peran**: Sistem login yang aman dengan tiga tingkat hak akses:
+    * **User**: Dapat melakukan pemesanan ruangan dan melihat riwayat booking pribadi.
+    * **Admin Divisi**: Mengelola ruangan milik divisinya, menyetujui atau menolak booking, dan membuat rekap laporan untuk divisinya sendiri.
+    * **Super Admin**: Memiliki kontrol penuh atas semua divisi, admin, dan dapat membuat laporan rekapitulasi dari semua divisi.
+* **Manajemen Booking**:
+    * Formulir pemesanan dengan pilihan tanggal dan jam.
+    * Pengecekan jadwal yang tumpang tindih (overlap) untuk mencegah booking ganda.
+    * Sistem persetujuan (approval) oleh Admin Divisi.
+* **Manajemen Ruangan & Divisi**:
+    * Super Admin dapat menambah, mengubah, dan menghapus divisi.
+    * Admin Divisi dapat menambah dan mengelola data ruangan yang menjadi tanggung jawabnya.
+* **Laporan PDF Dinamis**:
+    * Fitur untuk membuat laporan rekapitulasi booking dalam format PDF.
+    * Filter laporan berdasarkan rentang tanggal.
+    * Hak akses laporan yang disesuaikan: Admin hanya melihat data divisinya, Super Admin melihat semua.
+    * Untuk Super Admin, laporan PDF akan menampilkan data yang dikelompokkan dengan **tabel terpisah untuk setiap divisi**, membuatnya sangat rapi dan mudah dibaca.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+![Tampilan Halaman Filter](https://i.imgur.com/f9G4dYm.png)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠️ Teknologi yang Digunakan
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* **Backend**: PHP 8.x, Laravel 10.x
+* **Frontend**: HTML, CSS, JavaScript, Vite
+* **Database**: MySQL
+* **Laporan PDF**: `barryvdh/laravel-dompdf`
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## ⚙️ Panduan Instalasi
 
-## Contributing
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1.  **Clone Repositori**
+    ```bash
+    git clone [https://github.com/Lufasu-Adm/booking-ruang-rapat.git](https://github.com/Lufasu-Adm/booking-ruang-rapat.git)
+    cd booking-ruang-rapat
+    ```
 
-## Code of Conduct
+2.  **Instal Dependensi**
+    Pastikan Anda memiliki Composer terinstal.
+    ```bash
+    composer install
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3.  **Buat File `.env`**
+    Salin file `.env.example` menjadi `.env`.
+    ```bash
+    cp .env.example .env
+    ```
 
-## Security Vulnerabilities
+4.  **Generate Application Key**
+    ```bash
+    php artisan key:generate
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5.  **Konfigurasi Database**
+    Buka file `.env` dan sesuaikan konfigurasi database Anda.
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=nama_database_anda
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
 
-## License
+6.  **Jalankan Migrasi**
+    Perintah ini akan membuat semua tabel yang diperlukan di database Anda.
+    ```bash
+    php artisan migrate
+    ```
+    *Jika Anda memiliki seeder, jalankan juga `php artisan db:seed`.*
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7.  **Jalankan Server Pengembangan**
+    ```bash
+    php artisan serve
+    ```
+    Aplikasi sekarang dapat diakses di `http://127.0.0.1:8000`.
+
+---
+
+## 👤 Contoh Akun Pengguna
+
+Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda sudah membuatnya melalui seeder atau registrasi manual):
+
+* **Super Admin**:
+    * **Email**: `superadmin@example.com`
+    * **Password**: `password`
+* **Admin Divisi**:
+    * **Email**: `admin.divisi@example.com`
+    * **Password**: `password`
+* **User Biasa**:
+    * **Email**: `user@example.com`
+    * **Password**: `password`
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE.md).
+
+---
+
+Dibuat dengan ❤️ oleh **Lufasu-Adm**.
