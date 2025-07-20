@@ -16,13 +16,10 @@
             <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
             <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
         </div>
-        <div class="navbar-middle">
-            <a href="{{ route('superadmin.dashboard') }}">Dashboard</a>
-        </div>
         <div class="navbar-right">
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="navbar-button">Logout</button>
+                <button type="submit" class="navbar-button">LOGOUT</button>
             </form>
         </div>
     </nav>
@@ -30,23 +27,32 @@
     <div class="content-card">
         <div class="card-header">
             <h2>Super Admin Panel</h2>
-            <a href="{{ url('/divisions/create') }}" class="add-button">+ Tambah Divisi</a>
+            {{-- PERBAIKAN DI SINI --}}
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{{ route('divisions.create') }}" class="add-button">+ Tambah Divisi</a>
+                <a href="{{ route('bookings.export-filter') }}" class="add-button">📄 Laporan (Filter Tanggal)</a>
+                <a href="{{ route('bookings.rekap.pdfAll') }}" class="add-button" target="_blank">📄 Rekap Semua (Tanpa Filter)</a>
+            </div>
+            {{-- AKHIR PERBAIKAN --}}
         </div>
+
         <div class="card-body">
             <table class="responsive-table">
                 <thead>
                     <tr>
                         <th>Nama Divisi</th>
                         <th>Admin</th>
-                        <th>User</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($divisions as $division)
+                    @php
+                        $admin = $division->users->where('role', 'admin')->first();
+                    @endphp
                     <tr>
                         <td data-label="Divisi">{{ $division->name }}</td>
                         <td data-label="Admin">
-                            @php $admin = $division->users->where('role', 'admin')->first(); @endphp
                             @if($admin)
                                 <div class="user-cell">
                                     <div class="name">{{ $admin->name }}</div>
@@ -56,21 +62,29 @@
                                 -
                             @endif
                         </td>
-                        <td data-label="User">
-                             @php $user = $division->users->where('role', 'user')->first(); @endphp
-                             @if($user)
-                                <div class="user-cell">
-                                    <div class="name">{{ $user->name }}</div>
-                                    <div class="email">{{ $user->email }}</div>
+                        <td data-label="Action">
+                            <div class="action-buttons">
+                                <div class="action-row">
+                                    <a href="{{ route('divisions.edit', $division->id) }}" class="btn btn-edit">Edit</a>
+                                    <form action="{{ route('divisions.destroy', $division->id) }}" method="POST" 
+                                          onsubmit="return confirm('Are you sure you want to delete this division?');" 
+                                          style="width: 100%;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                    </form>
                                 </div>
-                             @else
-                                -
-                             @endif
+                                @if($admin)
+                                    <a href="{{ route('superadmin.admins.edit_password', $admin->id) }}" class="btn btn-password">
+                                        Change Password
+                                    </a>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" style="text-align:center; padding: 2rem;">Belum ada divisi yang dibuat.</td>
+                        <td colspan="3" style="text-align:center; padding: 2rem;">Belum ada divisi yang dibuat.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -78,6 +92,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

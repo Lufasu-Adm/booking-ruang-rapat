@@ -1,122 +1,117 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Room List</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Room List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  @if(Auth::user()->role === 'admin')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite('resources/css/admin.css')
-  @else
-    @vite('resources/css/app.css')
-  @endif
 </head>
+<body class="rooms-index-page">
 
-<body class="page-roomlist" style="margin:0; padding:0; min-height:100vh; background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed; background-size: cover; overflow-x: hidden; overflow-y: auto;">
-  <div class="dashboard-wrapper">
-    @auth
+<div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
+
     <nav class="navbar">
-      <div class="navbar-left">
-        <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
-        <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
-      </div>
-      <div class="navbar-middle">
-        <a href="{{ route('dashboard') }}">Dashboard</a>
-        <a href="{{ route('booking.create') }}">Booking</a>
-        <a href="{{ route('rooms.index') }}">Room List</a>
-        <a href="{{ route('bookings.index') }}">History</a>
-      </div>
-      <div class="navbar-right">
-        <a href="{{ route('dashboard') }}" class="back-button-navbar">BACK</a>
-      </div>
-    </nav>
-    @endauth
-
-    <div class="dashboard-content">
-      <div class="booking-form-wrapper">
-        <h2 class="booking-title">Room List</h2>
-
-        @if(session('success'))
-          <div class="flash-message flash-message-success">
-            {{ session('success') }}
-          </div>
-        @endif
-
-        @if(Auth::user()->role === 'admin')
-          <a href="{{ url('/rooms/create') }}" class="form-button primary">
-            + Add Room
-          </a>
-        @endif
-
-        <form method="GET" action="{{ route('rooms.index') }}" class="division-filter-form">
-          <label for="division_id">Filter by Division:</label>
-          <select name="division_id" id="division_id" onchange="this.form.submit()">
-            <option value="">-- All Divisions --</option>
-            @foreach($divisions as $division)
-              <option value="{{ $division->id }}" {{ (isset($selectedDivision) && $selectedDivision == $division->id) ? 'selected' : '' }}>
-                {{ $division->name }}
-              </option>
-            @endforeach
-          </select>
-        </form>
-
-        <div class="booking-room-button-wrapper">
-          <a href="{{ url('/booking/create') }}" class="form-button full-width">BOOKING ROOM</a>
+        @auth
+        @php
+            $name = auth()->user()->name;
+            $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
+        @endphp
+        <div class="navbar-user-info">
+            Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
         </div>
 
-        {{-- TABEL HANYA MUNCUL JIKA FILTER DIPILIH --}}
-        @if(request()->has('division_id') && request()->division_id != '')
-        <table class="booking-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Capacity</th>
-              <th>Location</th>
-              <th>Division</th>
-              <th>Status</th>
-              <th>Description</th>
-              @if(Auth::user()->role === 'admin')
-                <th>Actions</th>
-              @endif
-            </tr>
-          </thead>
-          <tbody>
-            @forelse($rooms as $room)
-              <tr>
-                <td>{{ $room->name }}</td>
-                <td>{{ $room->capacity }}</td>
-                <td>{{ $room->location ?? '-' }}</td>
-                <td>{{ $room->division->name ?? '-' }}</td>
-                <td>
-                  @if($room->is_available)
-                    <span class="status-approved">Available</span>
-                  @else
-                    <span class="status-rejected">Unavailable</span>
-                  @endif
-                </td>
-                <td>{{ $room->description ?? '-' }}</td>
-                @if(Auth::user()->role === 'admin')
-                  <td>
-                    <a href="{{ url('/rooms/'.$room->id.'/edit') }}" class="form-button secondary">Edit</a>
-                    <form method="POST" action="{{ url('/rooms/'.$room->id) }}" style="display:inline">
-                      @csrf @method('DELETE')
-                      <button type="submit" class="logout-button secondary" onclick="return confirm('Are you sure you want to delete this room?')">Delete</button>
-                    </form>
-                  </td>
-                @endif
-              </tr>
-            @empty
-              <tr>
-                <td colspan="{{ Auth::user()->role === 'admin' ? 7 : 6 }}" class="text-center">
-                  No rooms available.
-                </td>
-              </tr>
-            @endforelse
-          </tbody>
-        </table>
-        @endif {{-- END IF division selected --}}
-      </div>
-    </div>
-  </div>
+        <div class="navbar-links">
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
+            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
+            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Kelola Ruangan</a>
+            <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
+            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
+        </div>
+
+        <div class="navbar-right">
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" class="logout-button">LOGOUT</button>
+            </form>
+        </div>
+        @endauth
+    </nav>
+
+    <main class="main-content">
+        <div class="content-box">
+            <h2>Room List</h2>
+
+            @if(session('success'))
+                <div class="flash-message flash-message-success" style="background-color:#d1fae5; color:#065f46; padding:1rem; border-radius:8px; text-align:center; margin-bottom:1.5rem;">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
+            <div class="filter-container">
+                <form method="GET" action="{{ route('rooms.index') }}" class="division-filter-form">
+                    <label for="division_id">Filter by Division:</label>
+                    <select name="division_id" id="division_id" onchange="this.form.submit()">
+                        <option value="">-- All Divisions --</option>
+                        @foreach($divisions as $division)
+                            <option value="{{ $division->id }}" {{ (isset($selectedDivision) && $selectedDivision == $division->id) ? 'selected' : '' }}>
+                                {{ $division->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+
+            @if(request()->has('division_id') && request()->division_id != '')
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Capacity</th>
+                        <th>Location</th>
+                        <th>Division</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($rooms as $room)
+                    <tr>
+                        <td>{{ $room->name }}</td>
+                        <td>{{ $room->capacity }}</td>
+                        <td>{{ $room->location ?? '-' }}</td>
+                        <td>{{ $room->division->name ?? '-' }}</td>
+                        <td>
+                            @if($room->is_available)
+                                <span class="status status-available">Available</span>
+                            @else
+                                <span class="status status-unavailable">Unavailable</span>
+                            @endif
+                        </td>
+                        <td>{{ $room->description ?? '-' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center" style="text-align:center; padding: 2rem;">
+                            No rooms available for this division.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            @else
+            <div style="text-align:center; padding: 4rem 2rem; background-color: #f9fafb; border-radius: 8px; margin-top: 1.5rem;">
+                <p style="margin:0; font-size: 1.1rem; color: #6b7280;">Silakan pilih divisi untuk menampilkan daftar ruangan.</p>
+            </div>
+            @endif
+        </div>
+    </main>
+
+</div>
+
 </body>
 </html>

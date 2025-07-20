@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Division;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class BookingController extends BaseController
 {
@@ -16,9 +19,7 @@ class BookingController extends BaseController
         $this->middleware('auth');
     }
 
-    /**
-     * USER: Tampilkan riwayat booking milik user sendiri
-     */
+    // Riwayat booking milik sendiri
     public function index()
     {
         $user = auth()->user();
@@ -31,21 +32,16 @@ class BookingController extends BaseController
         return view('bookings.index', compact('bookings'));
     }
 
-    /**
-     * USER: Tampilkan form booking (hanya ruangan tersedia)
-     */
+    // Form booking
     public function create()
     {
-        // $rooms = Room::where('is_available', true)->get();
-        // $divisions = \App\Models\Division::whereHas('rooms')->get();
-        $divisions = \App\Models\Division::all();
-        $rooms = []; 
+        $divisions = Division::all();
+        $rooms = [];
+
         return view('bookings.create', compact('rooms', 'divisions'));
     }
 
-    /**
-     * USER: Simpan data booking
-     */
+    // Simpan booking
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -59,87 +55,197 @@ class BookingController extends BaseController
         $user = auth()->user();
         $room = Room::findOrFail($validated['room_id']);
 
-        if (!$room->is_available) {
-            return redirect()->back()->withErrors([
-                'room_id' => 'Ruangan tidak tersedia.'
-            ])->withInput();
+        if (! $room->is_available) {
+            return back()->withErrors(['room_id' => 'Ruangan tidak tersedia.'])->withInput();
         }
 
-        // ✅ Cari admin dari divisi si ruangan
-        $adminOfRoom = User::where('role', 'admin')
+        $newStart = $validated['date'].' '.$validated['start_time'].':00';
+        $newEnd = $validated['date'].' '.$validated['end_time'].':00';
+
+        $exists = Booking::where('room_id', $room->id)
+            ->where('date', $validated['date'])
+            ->where(function ($query) use ($newStart, $newEnd) {
+                $query->where('start_time', '<', $newEnd)
+                      ->where('end_time', '>', $newStart);
+            })
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['start_time' => 'Jadwal yang dipilih tumpang tindih dengan booking lain.'])->withInput();
+        }
+
+        $pic = User::where('role', 'admin')
             ->where('division_id', $room->division_id)
             ->first();
 
-        if (!$adminOfRoom) {
-            return redirect()->back()->withErrors([
-                'room_id' => 'Admin untuk divisi ruangan ini tidak ditemukan.'
-            ])->withInput();
+        if (! $pic) {
+            return back()->withErrors(['room_id' => 'PIC untuk divisi ini tidak ditemukan.'])->withInput();
         }
 
         Booking::create([
-            'user_id'      => $user->id,
-            'room_id'      => $room->id,
-            'date'         => $validated['date'],
-            'start_time'   => $validated['date'] . ' ' . $validated['start_time'] . ':00',
-            'end_time'     => $validated['date'] . ' ' . $validated['end_time'] . ':00',
-            // 'division_id'  => $validated['division_id'],
-            'division_id'  => $user->division_id,
-            'department'   => $validated['department'],
-            'status'       => 'pending',
-            'pic_user_id'  => $adminOfRoom->id, // ✅ admin dari divisi ruangan
+            'user_id'     => $user->id,
+            'room_id'     => $room->id,
+            'date'        => $validated['date'],
+            'start_time'  => $newStart,
+            'end_time'    => $newEnd,
+            'division_id' => $room->division_id,
+            'department'  => $validated['department'],
+            'status'      => 'pending',
+            'pic_user_id' => $pic->id,
         ]);
 
-        return redirect('/bookings')->with('success', 'Booking berhasil dibuat.');
+        return redirect()->route('bookings.index')->with('success', 'Booking berhasil dibuat.');
     }
 
-    /**
-     * ADMIN: Lihat semua booking dari divisinya
-     */
+    // Daftar booking pending (untuk admin divisi)
     public function all()
     {
-        $admin = auth()->user();
+        $user = auth()->user();
 
         $bookings = Booking::with(['room', 'user', 'pic'])
-            ->where('pic_user_id', $admin->id) // ✅ booking yang perlu dia acc
+            ->where('status', 'pending')
+            ->where('division_id', $user->division_id)
             ->orderByDesc('date')
             ->get();
 
         return view('admin.bookings', compact('bookings'));
     }
 
-    /**
-     * ADMIN: Approve booking jika dia yang jadi PIC
-     */
+    // Approve
     public function approve($id)
     {
-        $admin = auth()->user();
+        $user = auth()->user();
         $booking = Booking::findOrFail($id);
 
-        if ($booking->pic_user_id !== $admin->id) {
-            abort(403, 'Anda tidak berhak menyetujui booking ini.');
+        if (strtolower($user->role) !== 'admin' || $user->division_id !== $booking->division_id) {
+            abort(403);
         }
 
-        $booking->status = 'approved';
-        $booking->save();
+        $booking->update(['status' => 'approved']);
 
         return back()->with('success', 'Booking disetujui.');
     }
 
-    /**
-     * ADMIN: Reject booking jika dia yang jadi PIC
-     */
+    // Reject
     public function reject($id)
     {
-        $admin = auth()->user();
+        $user = auth()->user();
         $booking = Booking::findOrFail($id);
 
-        if ($booking->pic_user_id !== $admin->id) {
-            abort(403, 'Anda tidak berhak menolak booking ini.');
+        if (strtolower($user->role) !== 'admin' || $user->division_id !== $booking->division_id) {
+            abort(403);
         }
 
-        $booking->status = 'rejected';
-        $booking->save();
+        $booking->update(['status' => 'rejected']);
 
         return back()->with('success', 'Booking ditolak.');
+    }
+
+    // Tampilkan form filter + preview data
+    public function showExportFilter(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $bookings = [];
+        $user = auth()->user();
+
+        if ($startDate && $endDate) {
+            $query = Booking::with(['room.division', 'user']);
+
+            if (strtolower($user->role) === 'admin') {
+                $query->where('division_id', $user->division_id);
+            }
+
+            $bookings = $query->whereDate('date', '>=', $startDate)
+                            ->whereDate('date', '<=', $endDate)
+                            ->orderBy('date', 'asc')
+                            ->get();
+        }
+
+        $data = [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'bookings' => $bookings,
+        ];
+
+        // --- PERBAIKAN DI SINI ---
+        if (strtolower($user->role) === 'super_admin') {
+            return view('bookings.superadmin_rekap_filter', $data);
+        }
+        
+        return view('bookings.rekap_filter', $data);
+    }
+
+    // Export PDF berdasarkan filter tanggal
+    public function exportPdf(Request $request)
+    {
+        $request->validate([
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $start = $request->start_date;
+        $end = $request->end_date;
+        $user = auth()->user();
+        
+        $query = Booking::with(['room.division', 'user']);
+        $title = 'Rekap Booking Ruangan';
+
+        // --- PERBAIKAN DI SINI ---
+        if (strtolower($user->role) === 'admin') {
+            $query->where('division_id', $user->division_id);
+            $division = Division::find($user->division_id);
+            $title = 'Rekap Booking Divisi ' . ($division ? $division->name : '');
+        } elseif (strtolower($user->role) === 'super_admin') {
+            $title = 'Rekap Booking Semua Divisi';
+        }
+
+        $bookings = $query->whereDate('date', '>=', $start)
+                        ->whereDate('date', '<=', $end)
+                        ->orderBy('date', 'asc')
+                        ->get();
+        
+        $groupedBookings = $bookings->groupBy('room.division.name');
+        
+        $pdf = PDF::loadView('bookings.rekap_pdf', [
+            'title' => $title,
+            'groupedBookings' => $groupedBookings,
+            'startDate' => $start,
+            'endDate' => $end,
+            'printedBy' => $user->name,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('RekapBooking_' . now()->format('Ymd_His') . '.pdf');
+    }
+
+    // Export semua booking tanpa filter
+    public function rekapSemua()
+    {
+        $user = auth()->user();
+        $query = Booking::with(['room.division', 'user']);
+        $title = 'Rekap Booking Ruangan';
+
+        // --- PERBAIKAN DI SINI ---
+        if (strtolower($user->role) === 'admin') {
+            $query->where('division_id', $user->division_id);
+            $division = Division::find($user->division_id);
+            $title = 'Rekap Booking Divisi ' . ($division ? $division->name : '');
+        } elseif (strtolower($user->role) === 'super_admin') {
+            $title = 'Rekap Booking Semua Divisi';
+        }
+
+        $bookings = $query->orderBy('date', 'asc')->get();
+
+        $groupedBookings = $bookings->groupBy('room.division.name');
+
+        $pdf = PDF::loadView('bookings.rekap_pdf', [
+            'title' => $title,
+            'groupedBookings' => $groupedBookings,
+            'startDate' => null,
+            'endDate' => null,
+            'printedBy' => $user->name,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('RekapBooking_Semua_' . now()->format('Ymd_His') . '.pdf');
     }
 }

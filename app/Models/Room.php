@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Booking;
-use App\Models\Division;
 
 class Room extends Model
 {
@@ -20,13 +18,19 @@ class Room extends Model
         'division_id',
     ];
 
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
-
+    /**
+     * Relasi: satu ruangan dimiliki satu divisi
+     */
     public function division()
     {
         return $this->belongsTo(Division::class);
+    }
+
+    /**
+     * Relasi: satu ruangan bisa punya banyak booking
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

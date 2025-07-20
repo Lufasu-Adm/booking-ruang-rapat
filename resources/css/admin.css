@@ -1,565 +1,415 @@
-/* dashboard */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            height: 100%;
-        }
+/* =================================
+   LAYOUT DASAR & NAVBAR (UNTUK SEMUA HALAMAN)
+   ================================= */
 
-        .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-        }
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 100%;
+    background-color: #f4f7f6; /* Fallback background */
+}
 
-        .page-wrapper::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            margin: 1.5rem; 
-            position: relative;
-            z-index: 1;
-        }
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
 
-        .navbar-user-info {
-            color: #e5e7eb;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        .navbar-user-info strong {
-            color: white;
-            font-weight: 600;
-        }
-        
-        .logout-button {
-            background-color: rgba(220, 53, 69, 0.8);
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .logout-button:hover {
-            background-color: rgba(220, 53, 69, 1);
-        }
+.page-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
 
-        .main-content {
-            flex-grow: 1; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            text-align: center;
-            color: white;
-            position: relative;
-            z-index: 1;
-            padding: 2rem;
-        }
-        
-        .main-content h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 0;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-        }
-        
-        .main-content p {
-            font-size: 1.2rem;
-            margin: 0.5rem 0 2rem 0;
-            max-width: 500px;
-            color: #e5e7eb;
-        }
-        
-        .action-button {
-            background-color: white;
-            color: #212529;
-            padding: 1rem 2.5rem;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
-        }
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    margin: 1.5rem;
+    position: relative;
+    z-index: 1;
+    gap: 1.5rem;
+}
 
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .main-content h1 {
-                font-size: 2.2rem;
-            }
-            .main-content p {
-                font-size: 1rem;
-            }
-        }
+.navbar-user-info {
+    font-size: 1.1rem;
+    color: #e5e7eb;
+    white-space: nowrap;
+}
 
-/* bookings blade */
-        body, html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif; 
-            background-color: #f0f2f5;
-        }
+.navbar-user-info strong {
+    color: white;
+    font-weight: 600;
+}
 
-        .dashboard-wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
+.navbar-links {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
 
-        .dashboard-wrapper::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 1;
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-sizing: border-box;
-        }
-        .navbar-brand {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .navbar-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+.navbar-links a {
+    padding: 0.6rem 0.8rem;
+    color: #e5e7eb;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
 
-        .navbar-btn {
-            display: inline-block;
-            padding: 0.6rem 1.2rem; 
-            border-radius: 8px; 
-            border: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: white;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-        .navbar-btn:hover {
-             transform: translateY(-1px);
-        }
+.navbar-links a:hover,
+.navbar-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
 
-        .navbar-btn.back {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .navbar-btn.back:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        .navbar-btn.logout {
-            background-color: #dc3545; 
-        }
-        .navbar-btn.logout:hover {
-            background-color: #c82333;
-        }
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.logout-button {
+    background-color: rgba(220, 53, 69, 0.8);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.logout-button:hover {
+    background-color: rgba(220, 53, 69, 1);
+}
+
+/* =================================
+   LAYOUT KONTEN UTAMA (LOGIKA BARU)
+   ================================= */
+
+.main-content {
+    flex-grow: 1;
+    padding: 0 1.5rem 1.5rem 1.5rem; /* Padding horizontal sama dengan margin navbar */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Membuat semua konten di dalamnya terpusat */
+}
+
+/* Box putih umum untuk halaman tabel dan form */
+.content-box {
+    width: 100%; /* <-- KUNCI: Membuat lebar box sama dengan navbar */
+    background-color: #ffffff;
+    color: #1f2937;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+}
+
+.content-box h2 {
+    font-size: 1.75rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* =================================
+   GAYA SPESIFIK PER HALAMAN
+   ================================= */
+
+/* --- Untuk Halaman Dashboard --- */
+.dashboard-page .main-content {
+    align-items: stretch; /* Override agar dashboard tidak terpusat */
+}
+
+.dashboard-page .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding-top: 1rem;
+}
+
+.dashboard-page .card {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+}
+
+/* --- Untuk Halaman Booking Create --- */
+.booking-create-page .booking-form-wrapper {
+    width: 100%;
+    background-color: #ffffff;
+    color: #1f2937;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+}
+
+.booking-create-page .booking-form-wrapper .booking-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.booking-create-page .booking-form-wrapper form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.booking-create-page .booking-form-wrapper .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.booking-create-page .booking-form-wrapper .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.booking-create-page .booking-form-wrapper .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #1f2937;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.booking-create-page .booking-form-wrapper .form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.booking-create-page .booking-form-wrapper .form-button-wrapper {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.booking-create-page .booking-form-wrapper .form-button {
+    padding: 0.8rem 2.5rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.booking-create-page .booking-form-wrapper .form-button:hover {
+    background-color: #2563eb;
+}
+
+.booking-create-page .booking-form-wrapper .flash-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.booking-create-page .booking-form-wrapper .flash-message-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+/* =================================
+   KOMPONEN TABEL (UNTUK SEMUA TABEL)
+   ================================= */
+
+.booking-table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.booking-table th, .booking-table td,
+.data-table th, .data-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.booking-table th, .data-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.booking-table tr:hover td, .data-table tr:hover td {
+    background-color: #f3f4f6;
+}
+
+/* =================================
+   GAYA UNTUK HALAMAN KELOLA RUANGAN
+   ================================= */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+    margin: 0;
+    text-align: left;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s;
+}
+
+.btn-primary { background-color: #3b82f6; }
+.btn-primary:hover { background-color: #2563eb; }
+.btn-danger { background-color: #ef4444; }
+.btn-danger:hover { background-color: #dc2626; }
+
+.action-cell {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.status-pending { background-color: #fef3c7; color: #92400e; }
+.status-approved { background-color: #d1fae5; color: #065f46; }
+.status-rejected { background-color: #fee2e2; color: #991b1b; }
+.status-completed { background-color: #e0e7ff; color: #3730a3; }
+.status-available { background-color: #d1fae5; color: #065f46; }
+.status-unavailable { background-color: #fee2e2; color: #991b1b; }
+
+.btn-action {
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: white;
+    transition: opacity 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.btn-action:hover { opacity: 0.85; }
+.btn-action.approve { background-color: #22c55e; }
+.btn-action.reject { background-color: #ef4444; }
 
 
-        .content-container {
-            position: relative;
-            z-index: 2;
-            padding: 2rem;
-            margin-top: 80px; 
-            width: 100%;
-            max-width: 1100px;
-            margin-left: auto;
-            margin-right: auto;
-            box-sizing: border-box;
-        }
-        .content-box {
-            background-color: #ffffff; padding: 2rem; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            font-size: 2rem; font-weight: 600; color: #212529;
-            margin: 0 0 1.5rem 0; border-bottom: 2px solid #e9ecef;
-            padding-bottom: 0.5rem;
-        }
-        .alert-success {
-            background-color: #d1e7dd; color: #0f5132; padding: 1rem;
-            border-radius: 6px; margin-bottom: 1.5rem; border: 1px solid #badbcc;
-        }
-        .booking-table { width: 100%; border-collapse: collapse; }
-        .booking-table thead { background-color: #f8f9fa; }
-        .booking-table th, .booking-table td {
-            padding: 1rem; text-align: left;
-            border-bottom: 1px solid #dee2e6; vertical-align: middle;
-        }
-        .booking-table th { font-weight: 600; }
-        .booking-table tbody tr:hover { background-color: #f1f3f5; }
-        .btn-action {
-            display: inline-block; padding: 0.5rem 1rem; border: none;
-            border-radius: 5px; font-size: 0.9rem; font-weight: 500;
-            text-decoration: none; color: white; cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-        .btn-action:hover { transform: translateY(-1px); }
-        .btn-approve { background-color: #28a745; }
-        .btn-approve:hover { background-color: #218838; }
-        .btn-reject { background-color: #dc3545; }
-        .btn-reject:hover { background-color: #c82333; }
-        .status {
-            padding: 0.3rem 0.6rem; border-radius: 12px; font-size: 0.8rem;
-            font-weight: 600; text-transform: capitalize;
-        }
-        .status-pending { background-color: #fff3cd; color: #664d03; }
-        .status-approved { background-color: #d1e7dd; color: #0f5132; }
-        .status-rejected { background-color: #f8d7da; color: #58151c; }
-        @media (max-width: 768px) {
-        .navbar { flex-direction: column; gap: 1rem; padding-top: 1rem; padding-bottom: 1rem; }
-        .content-container { padding: 1rem; margin-top: 120px; }
-        .content-box { padding: 1rem; }
-        h2 { font-size: 1.5rem; }
-        .booking-table thead { display: none; }
-        .booking-table, .booking-table tbody, .booking-table tr, .booking-table td {
-            display: block; width: 100%;
-        }
-        .booking-table tr {
-            margin-bottom: 1rem; border: 1px solid #dee2e6;
-            border-radius: 8px; overflow: hidden;
-        }
-        .booking-table td { text-align: right; padding-left: 50%; position: relative; }
-        .booking-table td::before {
-            content: attr(data-label); position: absolute; left: 1rem;
-            width: 45%; padding-right: 1rem; text-align: left; 
-            font-weight: 600; color: #495057;
-        }
-        .booking-table td[data-label="Aksi"] form { display: block; margin-bottom: 0.5rem; }
-        .booking-table td[data-label="Aksi"] .btn-action { width: 100%; }
-        }
+/* =================================
+   RESPONSIVITAS
+   ================================= */
 
-
-/* rooms blade */
-        :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --danger-color: #dc2626;
-            --danger-hover: #b91c1c;
-            --success-color: #16a34a;
-            --gray-text: #6b7280;
-            --bg-light: #ffffff;
-            --bg-table-header: #f9fafb;
-            --navbar-height: 70px;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background: url('/public/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-            height: var(--navbar-height);
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            box-sizing: border-box;
-        }
-
-        .navbar-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .navbar-user-actions {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .navbar-role {
-            color: white;
-            font-weight: 500;
-            font-size: 1rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
-            padding-right: 1.5rem;
-        }
-
-        .btn.btn-sm {
-            padding: 0.5rem 1rem; 
-            font-size: 0.875rem;
-            line-height: 1.2; 
-        }
-
-        .page-wrapper {
-            position: relative;
-            min-height: 100vh;
-            padding: calc(var(--navbar-height) + 2rem) 2rem 2rem 2rem; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-
-        .content-container {
-            width: 100%;
-            max-width: 1100px;
-            background-color: var(--bg-light);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .page-header h2 {
-            margin: 0;
-            font-size: 1.75rem;
-            color: #111827;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-table th, .data-table td {
-            padding: 0.85rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .data-table th {
-            background-color: var(--bg-table-header);
-            color: #374151;
-            font-weight: 600;
-        }
-        
-        .data-table tr:last-child td { border-bottom: none; }
-        .data-table td { color: #374151; }
-
-        .status {
-            padding: 0.25rem 0.6rem;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--bg-light);
-        }
-        .status-available { background-color: var(--success-color); }
-        .status-unavailable { background-color: var(--danger-color); }
-
-        .action-cell {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .btn-primary { background-color: var(--primary-color); color: var(--bg-light); }
-        .btn-primary:hover { background-color: var(--primary-hover); }
-        .btn-danger { background-color: var(--danger-color); color: var(--bg-light); }
-        .btn-danger:hover { background-color: var(--danger-hover); }
-        .btn-secondary { background-color: #e5e7eb; color: #374151; }
-        .btn-secondary:hover { background-color: #d1d5db; }
-
-/* rooms/edit.blade */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-    :root {
-        --primary-color: #4A90E2;
-        --primary-hover-color: #357ABD;
-        --card-bg-color: rgba(255, 255, 255, 0.95);
-        --text-color: #333333;
-        --border-color: #dcdfe6;
-        --success-color: #28a745;
-        --error-color: #dc3545;
-        --font-family: 'Poppins', sans-serif;
+@media (max-width: 1200px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
     }
+    .navbar-user-info { text-align: center; order: 1; }
+    .navbar-links { justify-content: center; order: 2; flex-wrap: wrap; }
+    .navbar-right { justify-content: center; order: 3; }
+}
 
-    body.bg {
-        font-family: var(--font-family);
-        background-size: cover;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px;
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column;
+        align-items: stretch;
     }
-
-    .page-wrapper::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 0;
+    .navbar-links a {
+        text-align: center;
     }
     
-    .login-card {
-        background-color: var(--card-bg-color);
-        padding: 40px;
-        max-width: 400px;
-        width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(5px);
+    /* Membuat form booking menjadi 1 kolom di mobile */
+    .booking-create-page .booking-form-wrapper form {
+        grid-template-columns: 1fr;
     }
-
-    .login-title {
-        text-align: center;
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-top: 0;
-        margin-bottom: 30px;
+    
+    /* Membuat tabel menjadi responsif di mobile */
+    .data-table thead, .booking-table thead {
+        display: none;
     }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-label {
+    .data-table tr, .booking-table tr {
         display: block;
-        margin-bottom: 3px;
-        font-weight: 300;
-        color: #555;
-    }
-
-    .form-input, .form-select {
-        width: 100%;
-        padding: 12px 15px;
+        border: 1px solid #e5e7eb;
         border-radius: 8px;
-        border: 1px solid var(--border-color);
-        font-size: 1rem;
-        transition: border-color 0.3s, box-shadow 0.3s;
-        background-color: #fff;
+        margin-bottom: 1rem;
+        padding: 1rem;
     }
-
-    .form-input:focus, .form-select:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-    }
-
-    .alert-success, .alert-error {
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        color: #fff;
-    }
-
-    .alert-success {
-        background-color: var(--success-color);
-    }
-
-    .alert-error {
-        background-color: var(--error-color);
-    }
-
-    .form-button {
-        width: 100%;
-        padding: 15px;
-        border: none;
-        border-radius: 8px;
-        background-color: var(--primary-color);
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        margin-top: 10px;
-    }
-
-    .form-button:hover {
-        background-color: var(--primary-hover-color);
-        transform: translateY(-2px);
-    }
-
-    .form-footer {
+    .data-table td, .booking-table td {
         display: block;
-        text-align: center;
-        margin-top: 25px;
-        color: #555;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: color 0.3s;
+        text-align: right;
+        padding: 0.5rem 0;
+        border-bottom: 1px dotted #d1d5db;
     }
-
-    .form-footer:hover {
-        color: var(--primary-color);
-        text-decoration: underline;
+    .data-table td:last-child, .booking-table td:last-child {
+        border-bottom: none;
     }
+    .data-table td::before, .booking-table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: 600;
+        color: #374151;
+    }
+}

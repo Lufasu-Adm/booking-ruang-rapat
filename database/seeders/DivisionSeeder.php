@@ -12,10 +12,10 @@ class DivisionSeeder extends Seeder
      */
     public function run(): void
     {
-        $divisions = [
+        $raw = [
             'Divisi Rekayasa Umum',
             'Divisi Kapal Niaga',
-            'Divisi Supply Chain',
+            'Supply Chain',
             'Divisi Perencanaan Strategis Perusahaan',
             'Divisi Akuntansi',
             'Divisi Human Capital Management',
@@ -41,9 +41,12 @@ class DivisionSeeder extends Seeder
             'Direktorat Keuangan, Manajemen Risiko, & SDM',
         ];
 
-        foreach ($divisions as $name) {
+        foreach ($raw as $name) {
+            // Hilangkan awalan "Divisi " jika ada
+            $clean = preg_replace('/^Divisi\s+/i', '', $name);
+
             DB::table('divisions')->insertOrIgnore([
-                'name' => $name,
+                'name'       => $clean,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

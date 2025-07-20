@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
@@ -20,9 +20,11 @@
             <a href="{{ url('/admin/dashboard') }}" class="navbar-btn back">Kembali</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="navbar-btn logout">Logout</button>
+                <button type="submit" class="navbar-btn logout">LOGOUT</button>
             </form>
         </div>
+
+        
     </nav>
     <br>
     <div class="content-container">
@@ -81,4 +83,4 @@
 </div>
 
 </body>
-</html>
+</html> -->

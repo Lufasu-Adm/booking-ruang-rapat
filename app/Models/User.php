@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Booking;
-use App\Models\Division;
 
 class User extends Authenticatable
 {
@@ -17,7 +15,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'division_id', 
+        'division_id',
     ];
 
     protected $hidden = [
@@ -25,27 +23,30 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
-    // ✅ Relasi ke bookings yang dibuat user ini
+    /**
+     * Relasi: user membuat banyak booking
+     */
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
 
-    // ✅ Relasi ke booking sebagai PIC
+    /**
+     * Relasi: user sebagai PIC (admin yang menyetujui booking)
+     */
     public function picBookings()
     {
         return $this->hasMany(Booking::class, 'pic_user_id');
     }
 
-    // ✅ Relasi ke divisi
+    /**
+     * Relasi: user milik satu divisi
+     */
     public function division()
     {
         return $this->belongsTo(Division::class);

@@ -1,1253 +1,373 @@
-/* ========================== */
-/* ========== BASE ========== */
-/* ========================== */
+/* LOGIN */
+
+/* REGISTER */
+
+/* =================================
+   NAVBAR BERSAMA (REFINED)
+   ================================= */
 
 body, html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-size: cover;  /* Memastikan gambar menutupi seluruh layar */
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  background-position: center;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 100%;
 }
 
-
-
-/* Wrapper untuk dashboard dan konten lainnya */
-.dashboard-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Penuh layar */
-  position: relative;
-  color: white;
-  flex-grow: 1;
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
 }
 
-/* Efek transparansi untuk konten utama */
-.dashboard-wrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5); /* Memberikan efek gelap */
-  z-index: 0;
+.page-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
 }
 
-.dashboard-content {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Memberi ruang antar elemen */
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    margin: 1.5rem;
+    position: relative;
+    z-index: 1;
+    gap: 1.5rem; /* Memberi jarak antar grup elemen */
 }
 
-/* ========================== */
-/* ===== LOGIN & REGISTER ==== */
-/* ========================== */
-
-.login-card,
-.register-container {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  width: 100%;
-  max-width: 28rem;
-  margin: 10vh auto 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+/* Info User di Kiri */
+.navbar-user-info {
+    font-size: 1.1rem;
+    color: #e5e7eb;
+    white-space: nowrap; /* Mencegah teks turun baris */
 }
 
-.login-title,
-.register-title {
-  color: #1f2937;
-  font-size: 1.875rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1.5rem;
+.navbar-user-info strong {
+    color: white;
+    font-weight: 600;
 }
 
-.form-input,
-.register-input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  background-color: white;
-  color: #1f2937;
+/* Link Navigasi di Tengah */
+.navbar-links {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1; /* Membuatnya mengisi ruang yang tersedia di tengah */
+    gap: 1rem;
+    flex-wrap: wrap; /* Izinkan menu turun baris jika tidak muat */
 }
 
-.form-input::placeholder,
-.register-input::placeholder {
-  color: #6b7280;
+.navbar-links a {
+    padding: 0.6rem 1rem;
+    color: #e5e7eb;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
-.form-input:focus,
-.register-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px #3b82f6;
+.navbar-links a:hover,
+.navbar-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
 }
 
-.form-button,
-.register-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #306199;
-  color: #ffffff;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.form-button:hover,
-.register-button:hover {
-  background-color: #254d77;
-}
-
-.form-footer {
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-
-.form-footer a {
-  color: #306199;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.flash-message {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-.flash-message-success {
-  color: #16a34a;
-}
-
-.flash-message-error {
-  color: #dc2626;
-}
-
-.alert-success {
-  background-color: #d1fae5;
-  color: #065f46;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1rem;
-}
-
-.alert-error {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1rem;
-}
-
-/* ========================== */
-/* ===== DASHBOARD UI ====== */
-/* ========================== */
-
-
-
-/* Header kiri atas */
-.user-header {
-  position: absolute;
-  top: 0.60rem;
-  left: 1rem;
-  font-size: 0.80rem;
-}
-
-/* Container tombol */
-.button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  margin-top: 15vh;
-}
-
-/* Tombol dashboard */
-.dashboard-button {
-  background-color: white;
-  color: #306199;
-  font-weight: bold;
-  font-size: 1.5rem;
-  text-decoration: none;
-  padding: 2rem 4rem;
-  border-radius: 1.5rem;
-  width: 280px;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.30s ease;
-}
-
-.dashboard-button:hover {
-  background-color: #aaaaaa;
-}
-
-/* Logout */
-.logout-wrapper {
-  margin-top: 3rem;
-  text-align: center;
+/* Tombol Logout di Kanan */
+.navbar-right {
+    display: flex;
+    align-items: center;
 }
 
 .logout-button {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    background-color: rgba(220, 53, 69, 0.8);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
 }
 
 .logout-button:hover {
-  background-color: #770000;
-}
-/* ==== Tambahan Styling Booking Form === */
-.login-card select.form-input {
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20fill%3D'%236b7280'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%20width%3D'24'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M7%2010l5%205%205-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  padding-right: 2.5rem;
-}
-
-.login-card select.form-input:invalid {
-  color: #6b7280;
-}
-
-/* Optional: Make select look like input */
-.login-card select.form-input {
-  color: #1f2937;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  background-color: white;
-  color: #1f2937;
-  box-sizing: border-box;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px #3b82f6;
-}
-
-.form-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #306199;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.form-button:hover {
-  background-color: #254d77;
-}
-
-.dashboard-summary {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  height: 100%;
-  align-items: stretch;
-  flex-wrap: wrap;
-}
-
-
-.summary-left,
-.summary-right {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.summary-left {
-  flex: 1;
-}
-
-.summary-right {
-  width: 33%;
-}
-
-.summary-left .card,
-.summary-right .card {
-  background-color: white;
-  color: #000000;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  height: 100%;
-  font-size: 1rem;
-}
-
-.summary-right .date-time {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  height: 100%;
-}
-
-/* Bungkus stat cards dan jam agar sejajar dan terpusat */
-.dashboard-main {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 3rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-/* Lebar maksimal kontainer stat cards */
-.stat-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  flex: 1;
-  min-width: 300px;
-}
-
-/* Styling kartu statistik */
-.stat-cards .card {
-  border: 3px solid white;
-  border-radius: 1.5rem;
-  padding: 1.5rem 2rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #1f2937;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  font-size: 1.1rem;
-  font-weight: 600;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* Styling jam */
-.date-clock {
-  border: 3px solid white;
-  border-radius: 1.5rem;
-  padding: 2rem;
-  background-color: white;
-  color: #1f2937;
-  text-align: center;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  min-width: 250px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* Turunkan header utama */
-.dashboard-header {
-  margin-top: 6rem;
-  margin-bottom: 2rem;
-  text-align: left;
-}
-
-.dashboard-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.dashboard-header p {
-  font-size: 1rem;
-  margin: 0;
-  opacity: 0.9;
-}
-
-
-/* ========================== */
-/* ===== BOOKING HISTORY ==== */
-/* ========================== */
-
-.booking-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin-top: 1rem;
-  min-width: 960px;
-  margin: 0 auto; /* Center the table */
-}
-
-.booking-table th {
-  background-color: #f3f4f6;
-  color: #374151;
-  padding: 0.75rem;
-  text-align: left;
-  font-weight: bold;
-  font-size: 0.95rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.booking-table td {
-  padding: 0.75rem;
-  color: #1f2937;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 0.95rem;
-  background-color: #ffffff;
-}
-
-.booking-table tr:nth-child(even) td {
-  background-color: #f9fafb;
-}
-
-.booking-table tr:hover td {
-  background-color: #e5e7eb;
-}
-
-.status-approved {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.status-rejected {
-  color: #dc2626;
-  font-weight: bold;
-}
-
-.status-pending {
-  color: #6b7280;
-  font-weight: bold;
-}
-
-/* Background for page */
-.bg {
-  background-size: cover;
-  color: #1f2937;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  padding-top: 5vh;
-}
-
-a {
-  text-decoration: none;
-}
-
-
-
-/* ============================== */
-/* ===== BOOKING PAGE STYLE ===== */
-/* ============================== */
-
-.booking-room-button-wrapper {
-  margin-bottom: 1.5rem;
-  margin-top: 1.5rem;
-  margin-right: 3rem;
-}
-
-.full-width {
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-}
-
-.booking-footer {
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.booking-footer .form-button {
-  display: inline-block;
-  width: auto;
-  padding: 0.6rem 2rem;
-  margin-top: 1rem;
-}
-
-.form-button-wrapper .form-button {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-.full-width {
-  width: 100%;
-}
-
-
-/* ============================ */
-/* ========== NAVBAR ========== */
-/* ============================ */
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: rgba(255, 255, 255, 0.25); /* transparan putih */
-  color: #1f2937;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  flex-wrap: nowrap;
-  gap: 1rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  width: 100%;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-
-
-/* Kiri: Selamat Datang + Role */
-.navbar-left {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-  color: #0080ff;
-  min-width: 200px;
-}
-
-.navbar-left p {
-  margin: 0;
-  line-height: 1.2;
-}
-
-.navbar-left strong {
-  color: white;
-}
-
-.navbar-middle a {
-  position: relative;
-  text-decoration: none;
-  color: white !important;
-  font-weight: bold;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  transition: color 100s ease;
-  margin-right: 30px;
-}
-
-.navbar-middle a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background-color: white;
-  transition: 0.5s ease;
-}
-
-.navbar-middle a:hover::after {
-  width: 100%;
-}
-
-.navbar-middle a:hover {
-  color: white !important;
-}
-
-/* Kanan: Tombol Logout */
-.navbar-right {
-  display: flex;
-  justify-content: flex-end;
-  min-width: 120px;
-  margin-right: 80px;
-}
-
-.logout-button-navbar {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-  margin-right: 0rem;
-}
-
-.logout-button-navbar:hover {
-  background-color: #991b1b;
-}
-/* ============================ */
-/* === BOOKING FORM WRAPPER === */
-/* ============================ */
-.booking-form-wrapper {
-  max-width: 1200px;
-  margin: 5rem auto 3rem;
-  background: white;
-  border-radius: 2rem;
-  padding: 3rem 4rem;
-  color: #1f2937;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-
-
-/* Label untuk konsisten */
-.form-label {
-  font-weight: 600;
-  margin-top: 0.10rem;
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-/* Form Input Field */
-.form-input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  background-color: white;
-  color: #1f2937;
-  box-sizing: border-box;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px #3b82f6;
-}
-
-.form-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #306199;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.form-button:hover {
-  background-color: #254d77;
-}
-
-/* ============================ */
-/* ===== BACK LINK STYLE ===== */
-/* ============================ */
-.back-button-navbar {
-  background-color: #306199;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-}
-
-.back-button-navbar:hover {
-  background-color: #254d77;
-}
-
-/* ============================ */
-/* ===== ANIMATED UNDERLINE ===== */
-/* ============================ */
-/* Tambahkan efek garis bawah animasi ke link navbar */
-.navbar-middle a {
-  position: relative;
-  text-decoration: none;
-  color: #ffffff;
-  font-weight: bold;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
-
-.navbar-middle a::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background-color: #ffffff;
-  transition: width 0.3s ease;
-}
-
-.navbar-middle a:hover::after {
-  width: 100%;
-}
-
-.navbar-middle a:hover {
-  color: #ffffff;
-}
-
-/* ============================ */
-/* ==== BOOKING TITLE STYLE === */
-/* ============================ */
-.booking-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #1f2937;
-}
-
-body{
-  overflow-y: auto;
-  background-color: transparent;
-}
-
-/* ========================== */
-/* ===== ROOM LIST ======== */
-/* ========================== */
-
-body.page-roomlist,
-html.page-roomlist {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: url('assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
-  background-size: cover;
-  background-attachment: fixed;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-
-.page-roomlist .dashboard-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-  color: white;
-  padding: 2rem;
-  width: 100%;
-  max-width: 100%; /* Mengatur lebar penuh */
-  margin: 0 auto;
-  box-sizing: border-box;
-  flex-grow: 1; /* Membuat container tumbuh penuh */
-  background-size: cover; /* Memastikan gambar latar belakang menutupi seluruh area */
-}
-
-.page-roomlist .dashboard-wrapper::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
-}
-
-.page-roomlist .dashboard-content {
-  position: relative;
-  z-index: 1;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  box-sizing: border-box;
-  overflow: visible;
-
-  /* HAPUS atau KOMENTAR BARIS INI jika ada: */
-  /* background-color: rgba(255, 255, 255, 0.95); */
-}
-
-
-
-/* Styling untuk tabel */
-.page-roomlist .booking-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin-top: 1rem;
-  box-sizing: border-box;
-  background-color: transparent;
-}
-
-.page-roomlist .booking-table th {
-  background-color: #f3f4f6;
-  color: #374151;
-  padding: 0.75rem;
-  text-align: left;
-  font-weight: bold;
-  font-size: 0.95rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.page-roomlist .booking-table td {
-  padding: 0.75rem;
-  color: #1f2937;
-  border-bottom: 1px solid #e5e7eb;
-  font-size: 0.95rem;
-  background-color: #ffffff;
-}
-
-.page-roomlist .booking-table tr:nth-child(even) td {
-  background-color: #f9fafb;
-}
-
-.page-roomlist .booking-table tr:hover td {
-  background-color: #e5e7eb;
-}
-
-/* Status badges */
-.page-roomlist .status-approved {
-  color: #16a34a;
-  font-weight: bold;
-}
-
-.page-roomlist .status-rejected {
-  color: #dc2626;
-  font-weight: bold;
-}
-
-.page-roomlist .status-pending {
-  color: #6b7280;
-  font-weight: bold;
-}
-
-/* Styling tombol */
-.page-roomlist .form-button {
-  background-color: #306199;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  text-align: center;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.page-roomlist .form-button:hover {
-  background-color: #254d77;
-}
-
-
-/* ========================== */
-/* ===== BOOK A ROOM ======== */
-/* ========================== */
-
-/* Pastikan di Blade <body class="page-book"> */
-body.page-book,
-html.page-book {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-size: cover;
-  overflow-y: auto;
-}
-
-body.page-book .dashboard-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-  color: white;
-  padding: 2rem;
-}
-
-body.page-book .dashboard-wrapper::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
-}
-
-body.page-book .dashboard-content {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem;
-  margin-top: -10rem;
-}
-
-/* Form styling */
-body.page-book .booking-form-wrapper {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  max-width: 600px;
-  margin: 0 auto;
-  z-index: 1;
-}
-
-body.page-book .booking-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-}
-
-body.page-book .form-input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  background-color: white;
-  color: #1f2937;
-}
-
-body.page-book .form-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #306199;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-body.page-book .form-button:hover {
-  background-color: #254d77;
-}
-
-body.page-book .flash-message {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-body.page-book .flash-message-error {
-  color: #dc2626;
-}
-
-/* ========================== */
-/* ==== BOOKING HISTORY ==== */
-/* ========================== */
-
-
-
-body.page-history .dashboard-wrapper {
-  min-height: 100vh;
-  background-size: cover;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-body.page-history .dashboard-wrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
-}
-
-body.page-history .dashboard-content {
-  position: relative;
-  z-index: 1;
-  padding: 20rem 2rem 4rem;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
-body.page-history .flash-message {
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-}
-
-body.page-history .flash-message-success {
-  color: #16a34a;
-}
-
-
-body.page-history .booking-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin-top: 1rem;
-}
-
-body.page-history .booking-table th,
-body.page-history .booking-table td {
-  padding: 0.75rem;
-  font-size: 0.95rem;
-}
-
-body.page-history .booking-table th {
-  background-color: #f3f4f6;
-  color: #374151;
-  text-align: left;
-  font-weight: bold;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-body.page-history .booking-table td {
-  color: #1f2937;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #ffffff;
-}
-
-body.page-history .booking-table tr:nth-child(even) td {
-  background-color: #f9fafb;
-}
-
-body.page-history .booking-table tr:hover td {
-  background-color: #e5e7eb;
-}
-
-body.page-history .status-approved { color: #16a34a; font-weight: bold; }
-body.page-history .status-rejected { color: #dc2626; font-weight: bold; }
-body.page-history .status-pending  { color: #6b7280; font-weight: bold; }
-
-/* Booking History Pagination */
-.pagination-wrapper {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.pagination {
-  list-style: none;
-  padding-left: 0;
-  display: inline-flex;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.pagination li {
-  display: inline;
-}
-
-.pagination li a,
-.pagination li span {
-  padding: 0.5rem 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  color: #1f2937;
-  background-color: white;
-}
-
-.pagination li.active span {
-  background-color: #306199;
-  color: white;
-  border-color: #306199;
-}
-
-.pagination li .disabled {
-  color: #999;
-  cursor: not-allowed;
-  background-color: #eee;
-}
-
-/* ============================ */
-/* === BOOK A ROOM: 2 COLUMNS === */
-/* ============================ */
-
-/* 2 Kolom Layout untuk Form */
-body.page-book .booking-form-wrapper form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 2rem;
-  padding: 30px; /* Tambahkan padding dalam form */
-}
-
-/* Input + Label Group */
-body.page-book .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Tombol BOOK di tengah dan lebar responsif */
-body.page-book .form-button {
-  grid-column: span 2;
-  justify-self: center;
-  width: 40%;
-  padding: 10px 20px;
-}
-
-/* Hilangkan scroll & perbaiki wrapper */
-body.page-book,
-body.page-book .dashboard-wrapper {
-  height: 100vh;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-/* Scroll tetap aktif jika perlu */
-body.page-book .dashboard-wrapper {
-  overflow-y: auto;
-  padding-top: 80px; /* jarak dari navbar */
-}
-
-/* Content booking */
-body.page-book .dashboard-content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: calc(100vh - 80px);
-}
-
-/* Wrapper putih diperlebar */
-body.page-book .booking-form-wrapper {
-  background: white;
-  border-radius: 1;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  width: 100%;
-  max-width: 1030px; /* perlebar */
-  margin: 0 auto;
-}
-
-/* Judul tanpa margin atas */
-body.page-book .booking-title {
-  margin-top: 0;
-  grid-column: span 2;
-  text-align: center;
-}
-
-/* ========================== */
-/* ===== BASE STYLES ===== */
-/* ========================== */
-
-body.page-login {
-    background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
+    background-color: rgba(220, 53, 69, 1);
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =================================
+   RESPONSIVITAS NAVBAR
+   ================================= */
+
+/* Untuk Tablet */
+@media (max-width: 1024px) {
+    .navbar {
+        flex-direction: column; /* Ubah jadi vertikal */
+        align-items: stretch; /* Buat semua item selebar container */
+        gap: 1rem;
+    }
+
+    .navbar-links {
+        justify-content: center;
+        order: 2; /* Pindahkan menu ke bawah nama user */
+    }
+    
+    .navbar-user-info {
+        text-align: center;
+        order: 1;
+    }
+
+    .navbar-right {
+        justify-content: center;
+        order: 3; /* Tombol logout paling bawah */
+    }
+}
+
+/* Untuk Mobile */
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column; /* Buat menu jadi vertikal */
+        align-items: stretch; /* Buat setiap link selebar container */
+    }
+    .navbar-links a {
+        text-align: center;
+    }
+}
+
+
+/* DASHBOARD */
+.dashboard-page .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding-top: 1rem;
+}
+
+.dashboard-page .card {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: white;
+}
+
+/* ROOMS.INDEX */
+.rooms-index-page .main-content {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
 }
 
-.register-container {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 1.5rem;
+.rooms-index-page .content-box {
     width: 100%;
-    max-width: 28rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 1200px;
+    background-color: #ffffff;
+    color: #1f2937;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.rooms-index-page .content-box h2 {
+    font-size: 1.75rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
     text-align: center;
 }
 
-.register-title {
-    font-size: 1.875rem;
-    font-weight: bold;
-    color: #1f2937;
+.rooms-index-page .flash-message {
+    background-color:#d1fae5; 
+    color:#065f46; 
+    padding:1rem; 
+    border-radius:8px; 
+    text-align:center; 
+    margin-bottom:1.5rem;
+}
+ 
+.rooms-index-page .filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
 }
 
-/* Form input field styling */
-.register-input {
-    display: block;  /* Make sure input takes full width */
-    width: 100%;  /* Full width */
-    padding: 0.75rem;
-    margin-bottom: 1rem;
+.rooms-index-page .division-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.rooms-index-page .division-filter-form label {
+    font-weight: 500;
+}
+
+.rooms-index-page .division-filter-form select {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     border: 1px solid #d1d5db;
-    border-radius: 0.75rem;
-    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.rooms-index-page .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.rooms-index-page .data-table th, 
+.rooms-index-page .data-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.rooms-index-page .data-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+}
+ 
+.rooms-index-page .status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+.rooms-index-page .status-available { background-color: #d1fae5; color: #065f46; }
+.rooms-index-page .status-unavailable { background-color: #fee2e2; color: #991b1b; }
+
+/* ROOMS.EDIT */
+.form-page .main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+}
+
+.form-page .form-card {
+    width: 100%;
+    max-width: 600px; 
     background-color: white;
-    color: #1f2937;
-    box-sizing: border-box; /* Prevent padding from affecting width */
+    border-radius: 12px;
+    padding: 2rem;
+    color: #333;
 }
 
-.register-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px #3b82f6;
+.form-page .form-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: black;
 }
 
-/* Button styling */
-.register-button {
-    display: block;  /* Ensures the button takes up full width */
-    width: 100%;  /* Full width */
-    padding: 0.75rem;
-    background-color: #306199;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 0.75rem;
+.form-page .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-page .form-label {
+    display: block;
+    color: black;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-page .form-input,
+.form-page select.form-input,
+.form-page textarea.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #f3f4f6; 
+    border: 1px solid #d1d5db;  
+    border-radius: 8px;
+    color: #1f2937; 
+    font-family: 'Poppins', sans-serif;
     font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-page .form-input:focus,
+.form-page select.form-input:focus,
+.form-page textarea.form-input:focus {
+    outline: none;
+    border-color: #3b82f6; 
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.form-page .form-button {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #0d6efd; 
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-sizing: border-box;
-}
-
-.register-button:hover {
-    background-color: #254d77;
-}
-
-/* Footer for links */
-.form-footer {
     margin-top: 1rem;
-    font-size: 0.875rem;
-    color: #6b7280;
 }
 
-.form-footer a {
-    color: #306199;
-    text-decoration: none;
-    font-weight: bold;
+.form-page .form-button:hover {
+    background-color: #0b5ed7;
 }
 
-/* Flash messages */
-.flash-message {
+.form-page .form-footer {
+    display: block;
     text-align: center;
-    margin-bottom: 1rem;
-    font-size: 0.875rem;
+    margin-top: 1.5rem;
+    color: #4b5563;
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-.flash-message-success {
-    color: #16a34a;
+.form-page .form-footer:hover {
+    color: #1f2937;
+    text-decoration: underline;
+}
+ 
+.form-page .alert-success, 
+.form-page .alert-error {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
 }
 
-.flash-message-error {
-    color: #dc2626;
+.form-page .alert-success {
+    background-color: rgba(25, 135, 84, 0.9);
+    border: 1px solid rgba(25, 135, 84, 1);
 }
 
-/* ========================== */
-/* ===== MOBILE STYLES ===== */
-/* ========================== */
-
-@media screen and (max-width: 768px) {
-    .register-container {
-        width: 100%;
-        padding: 1.5rem;
-    }
-
-    .register-input {
-        padding: 0.6rem;
-    }
-
-    .register-button {
-        padding: 0.6rem;
-    }
+.form-page .alert-error {
+    background-color: rgba(220, 53, 69, 0.9);
+    border: 1px solid rgba(220, 53, 69, 1);
 }
+

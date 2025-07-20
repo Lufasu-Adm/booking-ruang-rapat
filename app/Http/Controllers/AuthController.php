@@ -5,50 +5,61 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Routing\Controller;
 
 class AuthController extends Controller
 {
-    // Tampilkan form register
+    public function __construct()
+    {
+        // Hanya guest yang boleh akses login/register
+        $this->middleware('guest')->only(['showLogin', 'showRegister']);
+        // Hanya yang login boleh logout
+        $this->middleware('auth')->only(['logout']);
+    }
+
+    /**
+     * Tampilkan form register (khusus untuk admin)
+     */
     public function showRegister()
     {
-        if (Auth::check()) {
-            return $this->redirectByRole();
-        }
         return view('register');
     }
 
-    // Proses register
+    /**
+     * Proses registrasi akun admin
+     */
     public function doRegister(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'name'        => 'required|string|max:100',
+            'email'       => 'required|email|unique:users',
+            'password'    => 'required|min:6|confirmed',
             'division_id' => 'required|exists:divisions,id',
         ]);
 
         $validated['password'] = bcrypt($validated['password']);
-        $validated['role'] = 'user';
+        $validated['role'] = 'admin';
 
         User::create($validated);
 
         return redirect('/login')->with('success', 'Registrasi berhasil, silakan login.');
     }
 
-    // Tampilkan form login
+    /**
+     * Tampilkan form login
+     */
     public function showLogin()
     {
-        if (Auth::check()) {
-            return $this->redirectByRole();
-        }
         return view('login');
     }
 
-    // Proses login
+    /**
+     * Proses login
+     */
     public function doLogin(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
@@ -60,26 +71,28 @@ class AuthController extends Controller
         return back()->with('error', 'Email atau password salah');
     }
 
-    // Proses logout
+    /**
+     * Proses logout
+     */
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/login');
     }
 
-    // Fungsi bantu: arahkan sesuai role
+    /**
+     * Arahkan user berdasarkan role setelah login
+     */
     public function redirectByRole()
     {
-        $role = auth()->user()->role;
-
-        if ($role === 'super_admin') {
-            return redirect()->route('superadmin.dashboard');
-        } elseif ($role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect()->route('dashboard');
-        }
+        return match (auth()->user()->role) {
+            'super_admin' => redirect()->route('superadmin.dashboard'),
+            // Admin & user diarahkan ke route dashboard biasa
+            'admin', 'user' => redirect()->route('dashboard'),
+            default => abort(403, 'Role tidak dikenali.'),
+        };
     }
 }

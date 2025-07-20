@@ -74,7 +74,7 @@
         }
 
         .navbar-button {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: #dc3545;
             color: white;
             padding: 0.6rem 1.2rem;
             border-radius: 8px;
@@ -87,7 +87,7 @@
             transition: background-color 0.3s ease;
         }
         .navbar-button:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255, 0, 0, 0.377);
         }
 
         .content-card {
@@ -272,7 +272,7 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
-            color: #374151;
+            color: #513737;
         }
 
         .form-group input {
@@ -343,4 +343,179 @@
             }
         }
 
-/* edit blade */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-right: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-edit {
+    background-color: #0d6efd;
+    color: white;
+}
+.btn-edit:hover {
+    background-color: #00245a;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-delete:hover {
+    background-color: #6b000b;
+}
+
+.btn-password {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-password:hover {
+    background-color: #2d3033;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.action-row {
+    display: flex;
+    gap: 0.4rem;
+    width: 100%;
+}
+
+.action-row .btn {
+    flex: 1; /* Agar Edit dan Delete sama besar */
+    text-align: center;
+}
+
+/* Optional agar Change Password punya ukuran mantap */
+.btn-password {
+    width: 100%;
+    text-align: center;
+}
+
+
+/* Agar tombol tidak menumpuk vertikal di desktop dan tetap fleksibel di mobile */
+@media (max-width: 576px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* =================================
+   GAYA UNTUK FORM EDIT DIVISI
+   ================================= */
+
+.form-container-edit {
+    max-width: 800px;
+    margin: 2rem auto; /* Memberi jarak dari navbar */
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.form-container-edit h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 2rem 0;
+    text-align: left;
+}
+
+.form-container-edit .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-container-edit .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.form-container-edit .form-control {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-container-edit .form-control:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+.form-container-edit .form-actions {
+    display: flex;
+    justify-content: flex-start; /* Tombol mulai dari kiri */
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Menggunakan kembali style .btn dari CSS Anda, hanya menambahkan beberapa penyesuaian */
+.form-container-edit .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-container-edit .btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.form-container-edit .btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+.form-container-edit .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.form-container-edit .btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Style untuk alert error, jika belum ada */
+.form-container-edit .alert.alert-danger {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    color: #842029;
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+}
+
+.form-container-edit .alert.alert-danger ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
