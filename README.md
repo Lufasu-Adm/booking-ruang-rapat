@@ -6,7 +6,8 @@
 
 Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel untuk memfasilitasi proses pemesanan ruang rapat di sebuah organisasi. Aplikasi ini dirancang dengan sistem multi-peran (multi-role) untuk mengatur hak akses yang berbeda bagi setiap pengguna.
 
-![Tampilan Dashboard Super Admin](https://github.com/Lufasu-Adm/booking-ruang-rapat/blob/main/UI/Admin.png)
+![Tampilan Dashboard Admin](https://github.com/Lufasu-Adm/booking-ruang-rapat/blob/main/UI/Admin.png)
+![Tampilan Dashboard Super Admin](https://github.com/Lufasu-Adm/booking-ruang-rapat/blob/main/UI/superadmin.png)
 
 ---
 
