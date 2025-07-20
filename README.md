@@ -3,6 +3,7 @@
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 
 Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel untuk memfasilitasi proses pemesanan ruang rapat di sebuah organisasi. Aplikasi ini dirancang dengan sistem multi-peran (multi-role) untuk mengatur hak akses yang berbeda bagi setiap pengguna.
 
@@ -16,8 +17,8 @@ Sistem Booking Ruang Rapat adalah aplikasi web yang dibangun menggunakan Laravel
 Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajemen dan pemesanan ruangan, antara lain:
 
 * **Autentikasi Multi-Peran**: Sistem login yang aman dengan dua tingkat hak akses:
-    * **Admin**: Memiliki kontrol penuh atas semua divisi, pengguna, ruangan, serta dapat menyetujui booking dan membuat laporan rekapitulasi dari semua divisi.
-    * **User**: Dapat melakukan pemesanan ruangan dan melihat riwayat booking pribadi.
+    * **SuperAdmin**: Memiliki kontrol penuh atas semua divisi, pengguna, ruangan, serta dapat menyetujui booking dan membuat laporan rekapitulasi dari semua divisi.
+    * **Admin**: Dapat melakukan pemesanan ruangan dan melihat riwayat booking pribadi.
 * **Manajemen Booking**:
     * Formulir pemesanan dengan pilihan tanggal dan jam.
     * Pengecekan jadwal yang tumpang tindih (overlap) untuk mencegah booking ganda.
@@ -37,7 +38,7 @@ Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajeme
 
 * **Backend**: PHP 8.x, Laravel 10.x
 * **Frontend**: HTML, CSS, JavaScript, Vite
-* **Database**: MySQL
+* **Database**: MySQL, PostgreSQL
 * **Laporan PDF**: `barryvdh/laravel-dompdf`
 
 ---
