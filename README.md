@@ -102,7 +102,7 @@ Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda s
 * **SuperAdmin**:
     * **Email**: `superadmin@example.com`
     * **Password**: `password`
-* **User Biasa**:
+* **Admin**:
     * **Email**: `kapal_perangr@example.com`
     * **Password**: `password`
 
