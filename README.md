@@ -23,6 +23,11 @@ Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajeme
     * Formulir pemesanan dengan pilihan tanggal dan jam.
     * Pengecekan jadwal yang tumpang tindih (overlap) untuk mencegah booking ganda.
     * Sistem persetujuan (approval) oleh Admin.
+* **Daftar Hadir via QR Code**:
+    * Setiap booking yang disetujui secara otomatis memiliki halaman daftar hadir dengan QR code unik.
+    * Peserta dapat memindai (scan) QR code menggunakan kamera ponsel untuk membuka formulir absensi.
+    * Proses pengisian daftar hadir **tidak memerlukan login**, memudahkan dan mempercepat proses registrasi peserta.
+    * Admin dapat melihat daftar peserta yang telah mengisi absensi secara real-time.
 * **Manajemen Ruangan & Divisi**:
     * Admin dapat menambah, mengubah, dan menghapus divisi serta ruangan.
 * **Laporan PDF Dinamis**:
@@ -40,6 +45,7 @@ Aplikasi ini dilengkapi dengan berbagai fitur untuk menunjang kebutuhan manajeme
 * **Frontend**: HTML, CSS, JavaScript, Vite
 * **Database**: MySQL, PostgreSQL
 * **Laporan PDF**: `barryvdh/laravel-dompdf`
+* **QR Code Generator**: `simplesoftwareio/simple-qrcode`
 
 ---
 
