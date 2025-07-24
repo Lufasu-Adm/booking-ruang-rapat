@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
-    <title>Dashboard - Sistem Reservasi</title>
+    <title>Dashboard - Reservation System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,11 +27,12 @@
 
             <div class="navbar-links">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
-                <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
-                <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Kelola Ruangan</a>
+                {{-- Corrected routeIs to match the route name for consistency --}}
+                <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create') ? 'active' : '' }}">Booking</a>
+                <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Bookings</a>
+                <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
                 <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
-                <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
+                <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
             </div>
 
             <div class="navbar-right">
@@ -45,31 +46,30 @@
 
         <main class="main-content">
             @auth
-            {{-- Tombol Rekap PDF --}}
                 @if (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <div style="text-align: right; margin-bottom: 1rem; margin-right: 2rem;">
-                        {{-- PERBAIKAN DILAKUKAN DI BARIS INI --}}
                         <a href="{{ route('bookings.export-filter') }}" class="rekap-button" style="background-color: #306199; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
-                            Download Rekap PDF
+                            Download Recap PDF
                         </a>
                     </div>
                 @endif
 
                 <section class="cards-container">
                     <div class="card">
-                        <h3>Total Ruangan</h3>
+                        <h3>Total Rooms</h3>
                         <p style="font-size: 2.5rem; font-weight: 700;">{{ $totalRooms ?? 8 }}</p>
                     </div>
                     <div class="card">
-                        <h3>Total Booking</h3>
+                        <h3>Total Bookings</h3>
                         <p style="font-size: 2.5rem; font-weight: 700;">{{ $totalBookings ?? 124 }}</p>
                     </div>
                     <div class="card">
-                        <h3>Booking Aktif</h3>
+                        <h3>Active Bookings</h3>
                         <p style="font-size: 2.5rem; font-weight: 700;">{{ $activeBookings ?? 5 }}</p>
                     </div>
                     <div class="card" style="text-align: center;">
-                        <p style="font-size: 1.5rem;">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+                        {{-- Changed to format() to ensure the date is always in English --}}
+                        <p style="font-size: 1.5rem;">{{ \Carbon\Carbon::now()->format('l, d F Y') }}</p>
                         <h1 id="live-time" style="font-size: 3.5rem; font-weight: 700;">{{ \Carbon\Carbon::now()->format('H:i') }}</h1>
                     </div>
                 </section>
@@ -80,7 +80,8 @@
     <script>
         function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString("id-ID", {
+            // The time format is already correctly set to 24-hour format
+            const timeString = now.toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
                 second: "2-digit",

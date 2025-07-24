@@ -2,51 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        // Hanya guest yang boleh akses login/register
-        $this->middleware('guest')->only(['showLogin', 'showRegister']);
-        // Hanya yang login boleh logout
-        $this->middleware('auth')->only(['logout']);
+        // Hanya guest (pengguna yang belum login) yang bisa mengakses halaman login dan register.
+        $this->middleware('guest')->except('logout');
+        // Hanya pengguna yang sudah login yang bisa logout.
+        $this->middleware('auth')->only('logout');
     }
 
     /**
-     * Tampilkan form register (khusus untuk admin)
+     * Menampilkan halaman form registrasi.
      */
     public function showRegister()
     {
+        // Jika form register perlu daftar divisi, uncomment baris ini
+        // $divisions = \App\Models\Division::all();
+        // return view('register', compact('divisions'));
         return view('register');
     }
 
     /**
-     * Proses registrasi akun admin
+     * Memproses data dari form registrasi.
      */
     public function doRegister(Request $request)
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:100',
-            'email'       => 'required|email|unique:users',
-            'password'    => 'required|min:6|confirmed',
-            'division_id' => 'required|exists:divisions,id',
+            'name'        => ['required', 'string', 'max:100'],
+            // Menggunakan validasi email standar
+            'email'       => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'    => ['required', 'confirmed', Password::defaults()],
+            'division_id' => ['required', 'exists:divisions,id'],
         ]);
 
         $validated['password'] = bcrypt($validated['password']);
-        $validated['role'] = 'admin';
+        $validated['role']     = 'admin';
 
         User::create($validated);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil, silakan login.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
     }
 
     /**
-     * Tampilkan form login
+     * Menampilkan halaman form login.
      */
     public function showLogin()
     {
@@ -54,25 +59,30 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login
+     * Memproses percobaan login dari pengguna.
      */
     public function doLogin(Request $request)
     {
+        // Validasi disesuaikan dengan seeder Anda (email tidak harus format email)
         $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
+            'email'    => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            // Panggil fungsi redirect yang sudah kita buat
             return $this->redirectByRole();
         }
 
-        return back()->with('error', 'Email atau password salah');
+        return back()->withErrors([
+            'email' => 'Kombinasi email/username dan password salah.',
+        ])->onlyInput('email');
     }
 
     /**
-     * Proses logout
+     * Memproses logout pengguna.
      */
     public function logout(Request $request)
     {
@@ -80,19 +90,30 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
     /**
-     * Arahkan user berdasarkan role setelah login
+     * Mengarahkan pengguna ke dashboard yang sesuai berdasarkan peran (role) mereka.
+     * Fungsi ini sekarang PUBLIC agar bisa dipanggil dari routes/web.php
      */
     public function redirectByRole()
     {
-        return match (auth()->user()->role) {
-            'super_admin' => redirect()->route('superadmin.dashboard'),
-            // Admin & user diarahkan ke route dashboard biasa
-            'admin', 'user' => redirect()->route('dashboard'),
-            default => abort(403, 'Role tidak dikenali.'),
-        };
+        $role = auth()->user()->role;
+
+        switch ($role) {
+            case 'super_admin':
+                return redirect()->route('superadmin.dashboard');
+            case 'admin':
+                // Admin langsung diarahkan ke halaman manajemen booking
+                return redirect()->route('dashboard');
+            case 'user':
+                // User biasa (jika ada) diarahkan ke dashboard umum
+                return redirect()->route('dashboard');
+            default:
+                // Jika peran tidak dikenali, logout untuk keamanan
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Peran pengguna tidak dikenali.');
+        }
     }
 }

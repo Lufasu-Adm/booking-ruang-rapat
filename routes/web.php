@@ -6,6 +6,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\AttendanceController; // Pastikan ini di-import
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\SuperAdminOnly;
 
@@ -104,16 +105,7 @@ Route::middleware(['auth', AdminOnly::class])->group(function () {
     Route::patch('/admin/bookings/{id}/reject', [BookingController::class, 'reject'])->name('admin.bookings.reject');
 });
 
-// Admin
-// Route::get('bookings/rekap/pdf', [BookingController::class, 'exportPdf'])
-//      ->name('bookings.export.pdf');
-
-// SuperAdmin
-// Route::get('bookings/rekap/pdf-all', [BookingController::class, 'exportPdfAll'])
-//      ->name('bookings.export.pdfAll');
-
 Route::get('/bookings/export-filter', [BookingController::class, 'showExportFilter'])->name('bookings.export-filter');
-
 Route::post('/bookings/rekap/pdf', [BookingController::class, 'exportPdf'])->name('bookings.rekap.pdf');
 Route::get('/bookings/rekap/pdf-all', [BookingController::class, 'rekapSemua'])->name('bookings.rekap.pdfAll');
 
@@ -128,3 +120,17 @@ Route::get('/api/rooms/by-division/{divisionId}', function ($divisionId) {
         ->select('id', 'name', 'capacity')
         ->get();
 })->middleware('auth')->name('api.rooms.byDivision');
+
+/*
+|--------------------------------------------------------------------------
+| DAFTAR HADIR (ATTENDANCE)
+|--------------------------------------------------------------------------
+*/
+// Route untuk Daftar Hadir (Publik, tidak perlu login)
+Route::get('/attendance/{booking}', [AttendanceController::class, 'create'])->name('attendance.create');
+Route::post('/attendance/{booking}', [AttendanceController::class, 'store'])->name('attendance.store');
+
+// Route untuk Admin melihat daftar peserta (perlu login)
+Route::get('/admin/bookings/{booking}/attendees', [BookingController::class, 'showAttendees'])
+    ->middleware('auth')
+    ->name('admin.bookings.attendees'); // <-- PERBAIKAN DI SINI

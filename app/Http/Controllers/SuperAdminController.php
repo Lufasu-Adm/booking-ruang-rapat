@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
-    // Dashboard utama Super Admin
+    // Dashboard utama Super Admin dengan pagination
     public function index()
     {
-        $divisions = Division::with('users')->get();
+        $divisions = Division::with('users')->paginate(5); // PAGINATE DI SINI
         return view('superadmin.dashboard', compact('divisions'));
     }
 
@@ -30,8 +30,6 @@ class SuperAdminController extends Controller
             'name'         => 'required|string|max:100|unique:divisions,name',
             'admin_name'   => 'required|string|max:100',
             'admin_email'  => 'required|email|unique:users,email',
-            'user_name'    => 'required|string|max:100',
-            'user_email'   => 'required|email|unique:users,email',
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -41,14 +39,6 @@ class SuperAdminController extends Controller
                 'name'         => $validated['admin_name'],
                 'email'        => $validated['admin_email'],
                 'role'         => 'admin',
-                'division_id'  => $division->id,
-                'password'     => bcrypt('password'),
-            ]);
-
-            User::create([
-                'name'         => $validated['user_name'],
-                'email'        => $validated['user_email'],
-                'role'         => 'user',
                 'division_id'  => $division->id,
                 'password'     => bcrypt('password'),
             ]);
@@ -79,8 +69,6 @@ class SuperAdminController extends Controller
             'admin_name'            => 'required|string|max:100',
             'admin_email'           => 'required|email|unique:users,email,' . ($admin->id ?? 'null'),
             'admin_password'        => 'nullable|string|min:6|confirmed',
-            'user_name'             => 'required|string|max:100',
-            'user_email'            => 'required|email|unique:users,email,' . ($user->id ?? 'null'),
         ]);
 
         DB::transaction(function () use ($division, $admin, $user, $validated) {
@@ -122,7 +110,7 @@ class SuperAdminController extends Controller
         return redirect()->route('superadmin.dashboard')->with('success', 'Divisi berhasil dihapus.');
     }
 
-    // (Opsional) Form ubah password admin via route terpisah
+    // Form ubah password admin
     public function editPassword($id)
     {
         $admin = User::where('id', $id)->where('role', 'admin')->firstOrFail();

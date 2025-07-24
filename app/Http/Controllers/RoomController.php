@@ -11,36 +11,40 @@ class RoomController extends Controller
 {
     // Semua: Lihat semua ruangan, bisa filter by divisi
     public function index(Request $request)
-    {
-        $divisions = Division::all();
-        $selectedDivision = $request->input('division_id');
+{
+    $divisions = Division::all();
+    $selectedDivision = $request->input('division_id');
+    $perPage = 5; // Tentukan jumlah item per halaman
 
-        $roomsQuery = Room::with('division');
+    $roomsQuery = Room::with('division');
 
-        if ($selectedDivision) {
-            $roomsQuery->where('division_id', $selectedDivision);
-        }
-
-        $rooms = $roomsQuery->get();
-
-        return view('rooms.index', compact('rooms', 'divisions', 'selectedDivision'));
+    if ($selectedDivision) {
+        $roomsQuery->where('division_id', $selectedDivision);
     }
+
+    // Ganti ->get() menjadi ->paginate()
+    // appends() digunakan agar filter divisi tidak hilang saat pindah halaman
+    $rooms = $roomsQuery->paginate($perPage)->appends($request->query());
+
+    return view('rooms.index', compact('rooms', 'divisions', 'selectedDivision'));
+}
 
     // ADMIN: Lihat semua ruangan dari divisinya
-    public function adminIndex()
-    {
-        $user = Auth::user();
+public function adminIndex()
+{
+    $user = Auth::user();
+    $perPage = 5; // Tentukan jumlah item per halaman
 
-        if ($user->role === 'super_admin') {
-            $rooms = Room::with('division')->get();
-        } else {
-            $rooms = Room::with('division')
-                ->where('division_id', $user->division_id)
-                ->get();
-        }
-
-        return view('admin.rooms', compact('rooms'));
+    if ($user->role === 'super_admin') {
+        $rooms = Room::with('division')->paginate($perPage);
+    } else {
+        $rooms = Room::with('division')
+            ->where('division_id', $user->division_id)
+            ->paginate($perPage);
     }
+
+    return view('admin.rooms', compact('rooms'));
+}
 
     // ADMIN: Form tambah ruangan
     public function create()

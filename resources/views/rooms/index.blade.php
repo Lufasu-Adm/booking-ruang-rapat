@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite('resources/css/admin.css')
+    @vite('resources/css/superadmin.css') {{-- Memuat CSS untuk pagination --}}
 </head>
 <body class="rooms-index-page">
 
@@ -27,10 +28,10 @@
         <div class="navbar-links">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
-            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
-            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Kelola Ruangan</a>
+            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Bookings</a>
+            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
             <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
-            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
+            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Booking History</a>
         </div>
 
         <div class="navbar-right">
@@ -66,7 +67,7 @@
                 </form>
             </div>
 
-            @if(request()->has('division_id') && request()->division_id != '')
+            @if(request()->filled('division_id'))
             <table class="data-table">
                 <thead>
                     <tr>
@@ -103,9 +104,51 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <!-- Pagination Start -->
+            @if ($rooms instanceof \Illuminate\Pagination\LengthAwarePaginator && $rooms->hasPages())
+                <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
+                    <ul class="pagination">
+                        {{-- Previous Page Link --}}
+                        @if ($rooms->onFirstPage())
+                            <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
+                        @else
+                            <li><a href="{{ $rooms->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($rooms->links()->elements as $element)
+                            {{-- "Three Dots" Separator --}}
+                            @if (is_string($element))
+                                <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
+                            @endif
+
+                            {{-- Array Of Links --}}
+                            @if (is_array($element))
+                                @foreach ($element as $page => $url)
+                                    @if ($page == $rooms->currentPage())
+                                        <li class="active" aria-current="page"><span>{{ $page }}</span></li>
+                                    @else
+                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($rooms->hasMorePages())
+                            <li><a href="{{ $rooms->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                        @else
+                            <li class="disabled" aria-disabled="true"><span>&raquo;</span></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
+            <!-- Pagination End -->
+
             @else
             <div style="text-align:center; padding: 4rem 2rem; background-color: #f9fafb; border-radius: 8px; margin-top: 1.5rem;">
-                <p style="margin:0; font-size: 1.1rem; color: #6b7280;">Silakan pilih divisi untuk menampilkan daftar ruangan.</p>
+                <p style="margin:0; font-size: 1.1rem; color: #6b7280;">Please select a division to display the room list.</p>
             </div>
             @endif
         </div>

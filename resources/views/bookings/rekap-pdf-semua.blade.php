@@ -2,41 +2,40 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Rekap Booking Semua Divisi</title>
+    <title>All Divisions Booking Summary</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 2rem; } /* Tambahkan margin-bottom */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 2rem; } /* Added margin-bottom */
         th, td { border:1px solid #999; padding:6px 10px; text-align:left; }
         th { background-color: #eee; }
         h2 { text-align:center; margin-bottom: 0.25em; }
-        h3 { margin-top: 2rem; margin-bottom: 0.5rem; } /* Style untuk nama divisi */
+        h3 { margin-top: 2rem; margin-bottom: 0.5rem; } /* Style for division name */
         p { margin: 0.1em 0; }
-        .page-break { page-break-after: always; } /* Class untuk pindah halaman */
+        .page-break { page-break-after: always; } /* Class for page break */
     </style>
 </head>
 <body>
-    <h2>Rekap Booking Semua Divisi</h2>
+    <h2>All Divisions Booking Summary</h2>
 
-    <p>Tanggal Cetak: {{ now()->format('d M Y H:i') }}</p>
-    <p>Dicetak oleh: {{ $printedBy }}</p>
+    <p><strong>Print Date:</strong> {{ now()->format('d-m-Y') }}</p>
+    <p><strong>Printed By:</strong> {{ $printedBy }}</p>
 
-    {{-- Lakukan iterasi untuk setiap divisi --}}
+    {{-- Iterate through each division --}}
     @forelse($bookingsByDivision as $divisionName => $bookings)
-        <h3>Divisi: {{ $divisionName ?: 'Tidak Ada Divisi' }}</h3>
+        <h3>Division: {{ $divisionName ?: 'No Division' }}</h3>
         <table>
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nama Ruangan</th>
-                    <th>Peminjam</th>
-                    <th>Mulai</th>
-                    <th>Selesai</th>
+                    <th>Room Name</th>
+                    <th>Booked By</th>
+                    <th>Start</th>
+                    <th>End</th>
                     <th>Status</th>
-                   
                 </tr>
             </thead>
             <tbody>
-                {{-- Iterasi untuk setiap booking di dalam divisi tersebut --}}
+                {{-- Iterate through each booking within the division --}}
                 @forelse($bookings as $booking)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
@@ -51,17 +50,16 @@
                             {{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
                         </td>
                         <td>{{ ucfirst($booking->status) }}</td>
-                        
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align:center;">Tidak ada data booking untuk divisi ini</td>
+                        <td colspan="6" style="text-align:center;">No booking data for this division</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     @empty
-        <p style="text-align:center; margin-top: 2rem;">Tidak ada data booking sama sekali.</p>
+        <p style="text-align:center; margin-top: 2rem;">No booking data available at all.</p>
     @endforelse
 
 </body>

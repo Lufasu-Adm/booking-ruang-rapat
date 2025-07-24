@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Carbon\Carbon; // Pastikan Carbon di-import
 
 class BookingController extends BaseController
 {
@@ -23,12 +24,10 @@ class BookingController extends BaseController
     public function index()
     {
         $user = auth()->user();
-
         $bookings = Booking::with(['user', 'room', 'pic'])
             ->where('user_id', $user->id)
             ->latest()
             ->paginate(5);
-
         return view('bookings.index', compact('bookings'));
     }
 
@@ -37,7 +36,6 @@ class BookingController extends BaseController
     {
         $divisions = Division::all();
         $rooms = [];
-
         return view('bookings.create', compact('rooms', 'divisions'));
     }
 
@@ -50,6 +48,7 @@ class BookingController extends BaseController
             'start_time'  => 'required',
             'end_time'    => 'required|after:start_time',
             'department'  => 'required|string|max:100',
+            'purpose'     => 'required|string|max:255',
         ]);
 
         $user = auth()->user();
@@ -90,6 +89,7 @@ class BookingController extends BaseController
             'end_time'    => $newEnd,
             'division_id' => $room->division_id,
             'department'  => $validated['department'],
+            'purpose'     => $validated['purpose'],
             'status'      => 'pending',
             'pic_user_id' => $pic->id,
         ]);
@@ -101,13 +101,11 @@ class BookingController extends BaseController
     public function all()
     {
         $user = auth()->user();
-
         $bookings = Booking::with(['room', 'user', 'pic'])
             ->where('status', 'pending')
             ->where('division_id', $user->division_id)
             ->orderByDesc('date')
             ->get();
-
         return view('admin.bookings', compact('bookings'));
     }
 
@@ -116,13 +114,10 @@ class BookingController extends BaseController
     {
         $user = auth()->user();
         $booking = Booking::findOrFail($id);
-
         if (strtolower($user->role) !== 'admin' || $user->division_id !== $booking->division_id) {
             abort(403);
         }
-
         $booking->update(['status' => 'approved']);
-
         return back()->with('success', 'Booking disetujui.');
     }
 
@@ -131,14 +126,32 @@ class BookingController extends BaseController
     {
         $user = auth()->user();
         $booking = Booking::findOrFail($id);
-
         if (strtolower($user->role) !== 'admin' || $user->division_id !== $booking->division_id) {
             abort(403);
         }
-
         $booking->update(['status' => 'rejected']);
-
         return back()->with('success', 'Booking ditolak.');
+    }
+
+    // Menampilkan daftar peserta hadir
+    public function showAttendees(Booking $booking)
+    {
+        $user = auth()->user();
+
+        // --- PERBAIKAN LOGIKA HAK AKSES DI SINI ---
+        $isSuperAdmin = strtolower($user->role) === 'super_admin';
+        $isAdmin = strtolower($user->role) === 'admin'; // Cukup periksa apakah perannya admin
+        $isTheBooker = $user->id === $booking->user_id;
+
+        // Izinkan jika salah satu dari kondisi di atas terpenuhi
+        if (! ($isSuperAdmin || $isAdmin || $isTheBooker)) {
+            abort(403, 'ACCESS DENIED');
+        }
+        // --- AKHIR PERBAIKAN ---
+
+        $attendees = $booking->attendances()->get();
+
+        return view('attendance.attendees', compact('booking', 'attendees'));
     }
 
     // Tampilkan form filter + preview data
@@ -168,7 +181,6 @@ class BookingController extends BaseController
             'bookings' => $bookings,
         ];
 
-        // --- PERBAIKAN DI SINI ---
         if (strtolower($user->role) === 'super_admin') {
             return view('bookings.superadmin_rekap_filter', $data);
         }
@@ -191,7 +203,6 @@ class BookingController extends BaseController
         $query = Booking::with(['room.division', 'user']);
         $title = 'Rekap Booking Ruangan';
 
-        // --- PERBAIKAN DI SINI ---
         if (strtolower($user->role) === 'admin') {
             $query->where('division_id', $user->division_id);
             $division = Division::find($user->division_id);
@@ -213,6 +224,7 @@ class BookingController extends BaseController
             'startDate' => $start,
             'endDate' => $end,
             'printedBy' => $user->name,
+            'printDate' => Carbon::now(),
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('RekapBooking_' . now()->format('Ymd_His') . '.pdf');
@@ -225,7 +237,6 @@ class BookingController extends BaseController
         $query = Booking::with(['room.division', 'user']);
         $title = 'Rekap Booking Ruangan';
 
-        // --- PERBAIKAN DI SINI ---
         if (strtolower($user->role) === 'admin') {
             $query->where('division_id', $user->division_id);
             $division = Division::find($user->division_id);
@@ -244,6 +255,7 @@ class BookingController extends BaseController
             'startDate' => null,
             'endDate' => null,
             'printedBy' => $user->name,
+            'printDate' => Carbon::now(),
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('RekapBooking_Semua_' . now()->format('Ymd_His') . '.pdf');

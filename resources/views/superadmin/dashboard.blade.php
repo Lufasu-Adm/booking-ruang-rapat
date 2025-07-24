@@ -14,7 +14,7 @@
     <nav class="navbar">
         <div class="navbar-left">
             <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
-            <p>You are <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
+            <p>Your role is <strong>{{ strtoupper(auth()->user()->role) }}</strong></p>
         </div>
         <div class="navbar-right">
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -27,22 +27,20 @@
     <div class="content-card">
         <div class="card-header">
             <h2>Super Admin Panel</h2>
-            {{-- PERBAIKAN DI SINI --}}
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="{{ route('divisions.create') }}" class="add-button">+ Tambah Divisi</a>
-                <a href="{{ route('bookings.export-filter') }}" class="add-button">📄 Laporan (Filter Tanggal)</a>
-                <a href="{{ route('bookings.rekap.pdfAll') }}" class="add-button" target="_blank">📄 Rekap Semua (Tanpa Filter)</a>
+                <a href="{{ route('divisions.create') }}" class="add-button">+ Add Division</a>
+                <a href="{{ route('bookings.export-filter') }}" class="add-button">📄 Recap (Date Filter)</a>
+                <a href="{{ route('bookings.rekap.pdfAll') }}" class="add-button" target="_blank">📄 All Recap (No Filter)</a>
             </div>
-            {{-- AKHIR PERBAIKAN --}}
         </div>
 
         <div class="card-body">
             <table class="responsive-table">
                 <thead>
                     <tr>
-                        <th>Nama Divisi</th>
+                        <th>Division Name</th>
                         <th>Admin</th>
-                        <th>Aksi</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,7 +49,7 @@
                         $admin = $division->users->where('role', 'admin')->first();
                     @endphp
                     <tr>
-                        <td data-label="Divisi">{{ $division->name }}</td>
+                        <td data-label="Division">{{ $division->name }}</td>
                         <td data-label="Admin">
                             @if($admin)
                                 <div class="user-cell">
@@ -84,11 +82,52 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="3" style="text-align:center; padding: 2rem;">Belum ada divisi yang dibuat.</td>
+                        <td colspan="3" style="text-align:center; padding: 2rem;">No divisions have been created yet.</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
+
+            <!-- Pagination Start -->
+            @if ($divisions->hasPages())
+                <div class="pagination-wrapper" style="display: flex; justify-content: center;">
+                    <ul class="pagination">
+                        {{-- Previous Page Link --}}
+                        @if ($divisions->onFirstPage())
+                            <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
+                        @else
+                            <li><a href="{{ $divisions->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($divisions->links()->elements as $element)
+                            {{-- "Three Dots" Separator --}}
+                            @if (is_string($element))
+                                <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
+                            @endif
+
+                            {{-- Array Of Links --}}
+                            @if (is_array($element))
+                                @foreach ($element as $page => $url)
+                                    @if ($page == $divisions->currentPage())
+                                        <li class="active" aria-current="page"><span>{{ $page }}</span></li>
+                                    @else
+                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($divisions->hasMorePages())
+                            <li><a href="{{ $divisions->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                        @else
+                            <li class="disabled" aria-disabled="true"><span>&raquo;</span></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
+            <!-- Pagination End -->
         </div>
     </div>
 </div>

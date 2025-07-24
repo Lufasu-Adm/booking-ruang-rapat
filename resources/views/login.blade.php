@@ -46,7 +46,11 @@
 
         <form method="POST" action="{{ route('login.store') }}">
             @csrf
-            <input type="text" name="email" placeholder="Email" required style="
+
+            <label for="email" style="display: block; text-align: left; font-weight: 500; margin-bottom: 0.25rem;">
+                Division (e.g. kapal_perang)
+            </label>
+            <input id="email" type="text" name="email" placeholder="kapal_perang" required style="
                 display: block;
                 width: 100%;
                 padding: 0.75rem;
@@ -59,11 +63,14 @@
                 box-sizing: border-box;
             ">
 
-            <input type="password" name="password" placeholder="Password" required style="
+            <label for="password" style="display: block; text-align: left; font-weight: 500; margin-bottom: 0.25rem;">
+                Password
+            </label>
+            <input id="password" type="password" name="password" placeholder="••••••••" required style="
                 display: block;
                 width: 100%;
                 padding: 0.75rem;
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
                 border: 1px solid #d1d5db;
                 border-radius: 0.75rem;
                 font-size: 1rem;
@@ -85,7 +92,9 @@
                 cursor: pointer;
                 transition: background-color 0.3s ease;
                 box-sizing: border-box;
-            " onmouseover="this.style.backgroundColor='#254d77'" onmouseout="this.style.backgroundColor='#306199'">
+            " 
+            onmouseover="this.style.backgroundColor='#254d77'" 
+            onmouseout="this.style.backgroundColor='#306199'">
                 LOGIN
             </button>
         </form>

@@ -15,15 +15,15 @@ class UserSeeder extends Seeder
         DB::table('users')->where('role', 'user')->delete();
 
         // Buat Super Admin jika belum ada
-        if (!DB::table('users')->where('email', 'superadmin@example.com')->exists()) {
+        if (!DB::table('users')->where('email', 'superadmin')->exists()) {
             DB::table('users')->insert([
-                'name' => 'Super Admin',
-                'email' => 'superadmin@example.com',
-                'password' => Hash::make('password'),
-                'role' => 'super_admin',
+                'name'        => 'Super Admin',
+                'email'       => 'superadmin',       // cukup 'superadmin'
+                'password'    => Hash::make('password'),
+                'role'        => 'super_admin',
                 'division_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at'  => now(),
+                'updated_at'  => now(),
             ]);
         }
 
@@ -31,19 +31,18 @@ class UserSeeder extends Seeder
         $divisions = DB::table('divisions')->get();
 
         foreach ($divisions as $division) {
-            $slug = Str::slug($division->name, '_');
-            $email = $slug . '@example.com';
+            $slug = Str::slug($division->name, '_'); // misal 'kapal_perang'
             $name = 'Admin Divisi ' . $division->name;
 
-            if (!DB::table('users')->where('email', $email)->exists()) {
+            if (!DB::table('users')->where('email', $slug)->exists()) {
                 DB::table('users')->insert([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => Hash::make('password'),
-                    'role' => 'admin',
+                    'name'        => $name,
+                    'email'       => $slug,              // cukup slug, tanpa @example.com
+                    'password'    => Hash::make('password'),
+                    'role'        => 'admin',
                     'division_id' => $division->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at'  => now(),
+                    'updated_at'  => now(),
                 ]);
             }
         }

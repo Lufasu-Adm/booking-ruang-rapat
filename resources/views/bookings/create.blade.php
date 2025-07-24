@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
-    <title>Book a Room - Sistem Reservasi</title>
+    <title>Book a Room - Reservation System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -28,11 +28,11 @@
 
             <div class="navbar-links">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
-                <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
-                <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Kelola Ruangan</a>
+                <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create') ? 'active' : '' }}">Booking</a>
+                <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Booking</a>
+                <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
                 <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
-                <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
+                <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
             </div>
 
             <div class="navbar-right">
@@ -46,7 +46,7 @@
 
         <main class="main-content">
             <div class="booking-form-wrapper">
-                <h2 class="booking-title">Book a Room</h2>
+                <h2 class="booking-title">Room Reservation</h2>
 
                 <form method="POST" action="{{ route('booking.store') }}">
                     @csrf
@@ -80,27 +80,30 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="date" class="form-label">Meeting Date</label>
-                        <input id="date" type="date" name="date" value="{{ old('date') }}" required class="form-input">
+                        <label for="purpose" class="form-label">Purpose</label>
+                        <input id="purpose" type="text" name="purpose" value="{{ old('purpose') }}" required class="form-input" placeholder="Enter the purpose of the meeting">
                     </div>
 
                     <div class="form-group">
                         <label for="department" class="form-label">Department</label>
-                        <input id="department" type="text" name="department" value="{{ old('department') }}" required class="form-input" placeholder="Enter Department Name">
+                        <input id="department" type="text" name="department" value="{{ old('department') }}" required class="form-input" placeholder="Enter department name">
                     </div>
 
                     <div class="form-group">
-                        <label for="start_time" class="form-label">Start Time</label>
-                        <input id="start_time" type="time" name="start_time" value="{{ old('start_time') }}" required class="form-input">
+                        <label class="form-label">Meeting Time</label>
+                        <div class="time-input-container">
+                            <input id="start_time" type="time" name="start_time" value="{{ old('start_time') }}" required class="form-input">
+                            <span>to</span>
+                            <input id="end_time" type="time" name="end_time" value="{{ old('end_time') }}" required class="form-input">
+                        </div>
                     </div>
-
+                    
                     <div class="form-group">
-                        <label for="end_time" class="form-label">End Time</label>
-                        <input id="end_time" type="time" name="end_time" value="{{ old('end_time') }}" required class="form-input">
+                        <label for="date" class="form-label">Meeting Date</label>
+                        <input id="date" type="date" name="date" value="{{ old('date') }}" required class="form-input">
                     </div>
-
                     <div class="form-button-wrapper">
-                        <button type="submit" class="form-button">BOOK</button>
+                        <button type="submit" class="form-button">SUBMIT RESERVATION</button>
                     </div>
                 </form>
             </div>

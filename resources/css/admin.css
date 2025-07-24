@@ -1,6 +1,6 @@
 /* =================================
-   LAYOUT DASAR & NAVBAR (UNTUK SEMUA HALAMAN)
-   ================================= */
+    LAYOUT DASAR & NAVBAR (UNTUK SEMUA HALAMAN)
+    ================================= */
 
 body, html {
     margin: 0;
@@ -44,10 +44,11 @@ body, html {
     gap: 1.5rem;
 }
 
+/* Info User di Kiri */
 .navbar-user-info {
     font-size: 1.1rem;
     color: #e5e7eb;
-    white-space: nowrap;
+    white-space: nowrap; /* Mencegah teks turun baris */
 }
 
 .navbar-user-info strong {
@@ -59,8 +60,8 @@ body, html {
     display: flex;
     justify-content: center;
     flex-grow: 1;
-    gap: 0.5rem;
     flex-wrap: wrap;
+    margin-right: 1.5rem; /* Tambahkan margin untuk menyamakan dengan padding navbar */
 }
 
 .navbar-links a {
@@ -100,8 +101,8 @@ body, html {
 }
 
 /* =================================
-   LAYOUT KONTEN UTAMA (LOGIKA BARU)
-   ================================= */
+    LAYOUT KONTEN UTAMA (LOGIKA BARU)
+    ================================= */
 
 .main-content {
     flex-grow: 1;
@@ -142,8 +143,8 @@ body, html {
 }
 
 /* =================================
-   GAYA SPESIFIK PER HALAMAN
-   ================================= */
+    GAYA SPESIFIK PER HALAMAN
+    ================================= */
 
 /* --- Untuk Halaman Dashboard --- */
 .dashboard-page .main-content {
@@ -221,6 +222,25 @@ body, html {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
+/* CSS BARU UNTUK MENGGABUNGKAN START & END TIME */
+.booking-create-page .time-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.booking-create-page .time-input-container span {
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.booking-create-page .time-input-container .form-input {
+    width: auto;
+    flex: 1;
+}
+/* AKHIR DARI CSS BARU */
+
+
 .booking-create-page .booking-form-wrapper .form-button-wrapper {
     grid-column: 1 / -1;
     text-align: center;
@@ -260,8 +280,8 @@ body, html {
 }
 
 /* =================================
-   KOMPONEN TABEL (UNTUK SEMUA TABEL)
-   ================================= */
+    KOMPONEN TABEL (UNTUK SEMUA TABEL)
+    ================================= */
 
 .booking-table, .data-table {
     width: 100%;
@@ -287,8 +307,8 @@ body, html {
 }
 
 /* =================================
-   GAYA UNTUK HALAMAN KELOLA RUANGAN
-   ================================= */
+    GAYA UNTUK HALAMAN KELOLA RUANGAN
+    ================================= */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -358,8 +378,8 @@ body, html {
 
 
 /* =================================
-   RESPONSIVITAS
-   ================================= */
+    RESPONSIVITAS
+    ================================= */
 
 @media (max-width: 1200px) {
     .navbar {

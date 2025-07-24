@@ -17,6 +17,7 @@ class Booking extends Model
         'end_time',
         'division_id',
         'department',
+        'purpose', 
         'status',
         'pic_user_id'
     ];
@@ -43,6 +44,11 @@ class Booking extends Model
     public function division()
     {
         return $this->belongsTo(Division::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 
 }

@@ -34,18 +34,17 @@ body, html {
 /* Navbar Container */
 .navbar {
     display: flex;
-    justify-content: space-between; /* Memberi ruang antar elemen */
+    justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     margin: 1.5rem;
     position: relative;
     z-index: 1;
-    gap: 1.5rem; /* Memberi jarak antar grup elemen */
+    gap: 1.5rem;
 }
 
 /* Info User di Kiri */
@@ -60,17 +59,16 @@ body, html {
     font-weight: 600;
 }
 
-/* Link Navigasi di Tengah */
 .navbar-links {
     display: flex;
     justify-content: center;
-    flex-grow: 1; /* Membuatnya mengisi ruang yang tersedia di tengah */
-    gap: 1rem;
-    flex-wrap: wrap; /* Izinkan menu turun baris jika tidak muat */
+    flex-grow: 1;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .navbar-links a {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 0.8rem;
     color: #e5e7eb;
     text-decoration: none;
     border-radius: 8px;

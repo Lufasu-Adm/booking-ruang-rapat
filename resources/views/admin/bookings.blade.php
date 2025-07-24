@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kelola Booking - Admin</title>
+    <title>Manage Bookings - Admin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @vite('resources/css/admin.css')
+    @vite('resources/css/superadmin.css') {{-- Memuat CSS untuk pagination --}}
 </head>
 <body class="admin-bookings-page">
 
@@ -28,10 +29,10 @@
         <div class="navbar-links">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create', 'booking/create') ? 'active' : '' }}">Booking</a>
-            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
-            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Kelola Ruangan</a>
+            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Bookings</a>
+            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
             <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
-            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
+            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
         </div>
 
         <div class="navbar-right">
@@ -45,35 +46,35 @@
     
     <main class="main-content">
         <div class="content-box">
-            <h2>Kelola Booking</h2>
+            <h2>Manage Bookings</h2>
             
             @if(session('success'))
                 <div class="alert-success">{{ session('success') }}</div>
             @endif
 
-            <div style="overflow-x: auto;"> <!-- Wrapper untuk tabel agar bisa scroll horizontal jika perlu -->
+            <div style="overflow-x: auto;">
                 <table class="booking-table">
                     <thead>
                         <tr>
                             <th>User</th>
-                            <th>Ruangan</th>
-                            <th>Tanggal</th>
-                            <th>Waktu</th>
+                            <th>Room</th>
+                            <th>Date</th>
+                            <th>Time</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bookings as $b)
                         <tr>
                             <td data-label="User">{{ $b->user->name }}</td>
-                            <td data-label="Ruangan">{{ $b->room->name }}</td>
-                            <td data-label="Tanggal">{{ \Carbon\Carbon::parse($b->date)->translatedFormat('d M Y') }}</td>
-                            <td data-label="Waktu">{{ \Carbon\Carbon::parse($b->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($b->end_time)->format('H:i') }}</td>
+                            <td data-label="Room">{{ $b->room->name }}</td>
+                            <td data-label="Date">{{ \Carbon\Carbon::parse($b->date)->translatedFormat('d M Y') }}</td>
+                            <td data-label="Time">{{ \Carbon\Carbon::parse($b->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($b->end_time)->format('H:i') }}</td>
                             <td data-label="Status">
                                 <span class="status status-{{ $b->status }}">{{ ucfirst($b->status) }}</span>
                             </td>
-                            <td data-label="Aksi">
+                            <td data-label="Action">
                                 @if($b->status == 'pending')
                                     <div style="display: flex; gap: 5px;">
                                         <form method="POST" action="{{ url('/admin/bookings/'.$b->id.'/approve') }}" style="display:inline-block;">
@@ -93,13 +94,55 @@
                         @empty
                         <tr>
                             <td colspan="6" style="text-align: center; padding: 2rem;">
-                                Tidak ada data booking yang perlu dikelola.
+                                No bookings to manage.
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination Start -->
+            @if ($bookings instanceof \Illuminate\Pagination\LengthAwarePaginator && $bookings->hasPages())
+                <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
+                    <ul class="pagination">
+                        {{-- Previous Page Link --}}
+                        @if ($bookings->onFirstPage())
+                            <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
+                        @else
+                            <li><a href="{{ $bookings->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($bookings->links()->elements as $element)
+                            {{-- "Three Dots" Separator --}}
+                            @if (is_string($element))
+                                <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
+                            @endif
+
+                            {{-- Array Of Links --}}
+                            @if (is_array($element))
+                                @foreach ($element as $page => $url)
+                                    @if ($page == $bookings->currentPage())
+                                        <li class="active" aria-current="page"><span>{{ $page }}</span></li>
+                                    @else
+                                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($bookings->hasMorePages())
+                            <li><a href="{{ $bookings->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                        @else
+                            <li class="disabled" aria-disabled="true"><span>&raquo;</span></li>
+                        @endif
+                    </ul>
+                </div>
+            @endif
+            <!-- Pagination End -->
+
         </div>
     </main>
 

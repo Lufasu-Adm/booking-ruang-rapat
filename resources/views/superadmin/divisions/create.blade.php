@@ -50,15 +50,7 @@
                     <input type="email" name="admin_email" id="admin_email" required value="{{ old('admin_email') }}">
                 </div>
 
-                <div class="form-group">
-                    <label for="user_name">Nama User</label>
-                    <input type="text" name="user_name" id="user_name" required value="{{ old('user_name') }}">
-                </div>
                 
-                <div class="form-group">
-                    <label for="user_email">Email User</label>
-                    <input type="email" name="user_email" id="user_email" required value="{{ old('user_email') }}">
-                </div>
 
                 <div class="form-actions">
                     <button type="submit" class="form-button primary">Simpan</button>
