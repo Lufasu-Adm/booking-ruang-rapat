@@ -104,7 +104,7 @@ Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda s
     * **Email**: `superadmin@example.com`
     * **Password**: `password`
 * **Admin**:
-    * **Email**: `kapal_perangr@example.com`
+    * **Email**: `kapal_perang@example.com`
     * **Password**: `password`
 
 ---
