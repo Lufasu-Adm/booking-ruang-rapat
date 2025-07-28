@@ -114,11 +114,4 @@ Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda s
     * **Password**: `password`
 
 ---
-
-## 📄 Lisensi
-
-Proyek ini dilisensikan di bawah [MIT License](LICENSE.md).
-
----
-
 Dibuat dengan ❤️ oleh **Lufasu-Adm**.
