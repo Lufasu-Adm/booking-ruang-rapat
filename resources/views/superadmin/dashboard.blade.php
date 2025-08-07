@@ -10,7 +10,9 @@
     @vite('resources/css/superadmin.css')
 </head>
 <body class="page-superadmin">
+{{-- Wrapper utama halaman Super Admin --}}
 <div class="dashboard-wrapper">
+    {{-- Bagian navbar untuk menampilkan info user dan tombol logout --}}
     <nav class="navbar">
         <div class="navbar-left">
             <p>Welcome, <strong>{{ strtoupper(auth()->user()->name) }}</strong></p>
@@ -24,9 +26,11 @@
         </div>
     </nav>
 
+    {{-- Konten utama dashboard --}}
     <div class="content-card">
         <div class="card-header">
             <h2>Super Admin Panel</h2>
+            {{-- Tombol-tombol aksi untuk Super Admin --}}
             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                 <a href="{{ route('divisions.create') }}" class="add-button">+ Add Division</a>
                 <a href="{{ route('bookings.export-filter') }}" class="add-button">📄 Recap (Date Filter)</a>
@@ -35,6 +39,7 @@
         </div>
 
         <div class="card-body">
+            {{-- Tabel responsif untuk menampilkan daftar divisi --}}
             <table class="responsive-table">
                 <thead>
                     <tr>
@@ -44,8 +49,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Loop untuk menampilkan setiap divisi dan adminnya --}}
                     @forelse($divisions as $division)
                     @php
+                        // Mencari user dengan role 'admin' di divisi saat ini
                         $admin = $division->users->where('role', 'admin')->first();
                     @endphp
                     <tr>
@@ -64,8 +71,9 @@
                             <div class="action-buttons">
                                 <div class="action-row">
                                     <a href="{{ route('divisions.edit', $division->id) }}" class="btn btn-edit">Edit</a>
-                                    <form action="{{ route('divisions.destroy', $division->id) }}" method="POST" 
-                                          onsubmit="return confirm('Are you sure you want to delete this division?');" 
+                                    {{-- Form untuk menghapus divisi --}}
+                                    <form action="{{ route('divisions.destroy', $division->id) }}" method="POST"
+                                          onsubmit="return confirm('Are you sure you want to delete this division?');"
                                           style="width: 100%;">
                                         @csrf
                                         @method('DELETE')
@@ -73,6 +81,7 @@
                                     </form>
                                 </div>
                                 @if($admin)
+                                    {{-- Tombol untuk mengubah password admin --}}
                                     <a href="{{ route('superadmin.admins.edit_password', $admin->id) }}" class="btn btn-password">
                                         Change Password
                                     </a>
@@ -88,25 +97,22 @@
                 </tbody>
             </table>
 
-            <!-- Pagination Start -->
+            {{-- Bagian pagination --}}
             @if ($divisions->hasPages())
                 <div class="pagination-wrapper" style="display: flex; justify-content: center;">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
+                        {{-- Link ke halaman sebelumnya --}}
                         @if ($divisions->onFirstPage())
                             <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
                         @else
                             <li><a href="{{ $divisions->previousPageUrl() }}" rel="prev">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
+                        {{-- Menampilkan link halaman --}}
                         @foreach ($divisions->links()->elements as $element)
-                            {{-- "Three Dots" Separator --}}
                             @if (is_string($element))
                                 <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
                             @endif
-
-                            {{-- Array Of Links --}}
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
                                     @if ($page == $divisions->currentPage())
@@ -118,7 +124,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
+                        {{-- Link ke halaman berikutnya --}}
                         @if ($divisions->hasMorePages())
                             <li><a href="{{ $divisions->nextPageUrl() }}" rel="next">&raquo;</a></li>
                         @else
@@ -127,7 +133,6 @@
                     </ul>
                 </div>
             @endif
-            <!-- Pagination End -->
         </div>
     </div>
 </div>

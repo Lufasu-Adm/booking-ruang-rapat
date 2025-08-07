@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19a6e04f3db03b8eebb62afa370d3152",
+    "content-hash": "9695443ecaaa043da12de6e8fac451e6",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6317,6 +6317,63 @@
     ],
     "packages-dev": [
         {
+            "name": "curl/curl",
+            "version": "1.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-mod/curl.git",
+                "reference": "82cac3f504e2c6b31eb0f379dc2f80f6d0e80cbb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-mod/curl/zipball/82cac3f504e2c6b31eb0f379dc2f80f6d0e80cbb",
+                "reference": "82cac3f504e2c6b31eb0f379dc2f80f6d0e80cbb",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Curl": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hassan Amouhzi",
+                    "email": "hassan@anezi.net",
+                    "homepage": "http://hassan.amouhzi.com"
+                },
+                {
+                    "name": "php-curl-class",
+                    "homepage": "https://github.com/php-curl-class"
+                },
+                {
+                    "name": "user52",
+                    "homepage": "https://github.com/user52"
+                }
+            ],
+            "description": "cURL class for PHP",
+            "homepage": "https://github.com/php-mod/curl",
+            "keywords": [
+                "curl",
+                "dot"
+            ],
+            "support": {
+                "issues": "https://github.com/php-mod/curl/issues",
+                "source": "https://github.com/php-mod/curl/tree/master"
+            },
+            "time": "2014-08-14T20:11:02+00:00"
+        },
+        {
             "name": "fakerphp/faker",
             "version": "v1.24.1",
             "source": {
@@ -7512,6 +7569,43 @@
                 }
             ],
             "time": "2025-06-27T04:36:07+00:00"
+        },
+        {
+            "name": "scribble/scribble",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GoScribble/Scribble.git",
+                "reference": "84a0ab4f8f4632250019f9ed0ef42cf5fcbc4eb4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GoScribble/Scribble/zipball/84a0ab4f8f4632250019f9ed0ef42cf5fcbc4eb4",
+                "reference": "84a0ab4f8f4632250019f9ed0ef42cf5fcbc4eb4",
+                "shasum": ""
+            },
+            "require": {
+                "curl/curl": "@dev"
+            },
+            "require-dev": {
+                "curl/curl": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Scribble\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Publish your blog posts across multiple blogging platforms and sites",
+            "support": {
+                "issues": "https://github.com/GoScribble/Scribble/issues",
+                "source": "https://github.com/GoScribble/Scribble/tree/master"
+            },
+            "time": "2015-05-09T10:40:26+00:00"
         },
         {
             "name": "sebastian/cli-parser",

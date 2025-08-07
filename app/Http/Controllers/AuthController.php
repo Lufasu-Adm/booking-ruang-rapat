@@ -7,19 +7,33 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Http\RedirectResponse; // Tambahkan ini
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers
+ *
+ * Controller yang menangani semua fungsionalitas autentikasi pengguna.
+ * Termasuk registrasi, login, dan logout.
+ */
 class AuthController extends Controller
 {
+    /**
+     * AuthController constructor.
+     * Menerapkan middleware untuk membatasi akses ke metode-metode autentikasi.
+     * Metode login dan register hanya bisa diakses oleh tamu (guest).
+     * Metode logout hanya bisa diakses oleh pengguna yang sudah login (auth).
+     */
     public function __construct()
     {
-        // Hanya guest (pengguna yang belum login) yang bisa mengakses halaman login dan register.
         $this->middleware('guest')->except('logout');
-        // Hanya pengguna yang sudah login yang bisa logout.
         $this->middleware('auth')->only('logout');
     }
 
     /**
      * Menampilkan halaman form registrasi.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function showRegister()
     {
@@ -30,13 +44,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Memproses data dari form registrasi.
+     * Memproses data dari form registrasi dan membuat pengguna baru.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function doRegister(Request $request)
     {
         $validated = $request->validate([
             'name'        => ['required', 'string', 'max:100'],
-            // Menggunakan validasi email standar
             'email'       => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'    => ['required', 'confirmed', Password::defaults()],
             'division_id' => ['required', 'exists:divisions,id'],
@@ -52,6 +68,8 @@ class AuthController extends Controller
 
     /**
      * Menampilkan halaman form login.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function showLogin()
     {
@@ -60,10 +78,13 @@ class AuthController extends Controller
 
     /**
      * Memproses percobaan login dari pengguna.
+     * Jika kredensial valid, akan mengarahkan pengguna ke dashboard yang sesuai.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function doLogin(Request $request)
     {
-        // Validasi disesuaikan dengan seeder Anda (email tidak harus format email)
         $credentials = $request->validate([
             'email'    => ['required', 'string'],
             'password' => ['required', 'string'],
@@ -72,7 +93,6 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            // Panggil fungsi redirect yang sudah kita buat
             return $this->redirectByRole();
         }
 
@@ -83,6 +103,9 @@ class AuthController extends Controller
 
     /**
      * Memproses logout pengguna.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function logout(Request $request)
     {
@@ -95,7 +118,8 @@ class AuthController extends Controller
 
     /**
      * Mengarahkan pengguna ke dashboard yang sesuai berdasarkan peran (role) mereka.
-     * Fungsi ini sekarang PUBLIC agar bisa dipanggil dari routes/web.php
+     *
+     * @return RedirectResponse
      */
     public function redirectByRole()
     {
@@ -105,13 +129,10 @@ class AuthController extends Controller
             case 'super_admin':
                 return redirect()->route('superadmin.dashboard');
             case 'admin':
-                // Admin langsung diarahkan ke halaman manajemen booking
                 return redirect()->route('dashboard');
             case 'user':
-                // User biasa (jika ada) diarahkan ke dashboard umum
                 return redirect()->route('dashboard');
             default:
-                // Jika peran tidak dikenali, logout untuk keamanan
                 Auth::logout();
                 return redirect()->route('login')->with('error', 'Peran pengguna tidak dikenali.');
         }

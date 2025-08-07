@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- Internal CSS --}}
+    {{-- Internal CSS untuk styling halaman --}}
     <style>
         body, html {
             margin: 0;
@@ -53,23 +53,23 @@
             gap: 1.5rem;
         }
 
-        .navbar-title { 
-            font-size: 1.2rem; 
-            color: white; 
-            white-space: nowrap; 
+        .navbar-title {
+            font-size: 1.2rem;
+            color: white;
+            white-space: nowrap;
             font-weight: 600;
         }
         
-        .navbar-button { 
-            background-color: rgba(108, 117, 125, 0.8); 
-            color: white; 
-            padding: 0.6rem 1.2rem; 
-            border-radius: 8px; 
-            border: none; 
-            font-weight: 600; 
-            font-family: 'Poppins', sans-serif; 
-            cursor: pointer; 
-            transition: background-color 0.3s ease; 
+        .navbar-button {
+            background-color: rgba(108, 117, 125, 0.8);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
             white-space: nowrap;
             text-decoration: none;
         }
@@ -175,13 +175,14 @@
 <body>
 
 <div class="page-wrapper">
-    {{-- Navbar --}}
+    {{-- Navbar dengan judul dan tombol kembali ke dashboard --}}
     <nav class="navbar">
         <div class="navbar-title">
             Room Booking System - Admin
         </div>
 
         <div class="navbar-right">
+            {{-- Tombol kembali yang mengarah ke dashboard sesuai role user --}}
             @if (strtolower(auth()->user()->role) === 'super_admin')
                 <a href="{{ route('superadmin.dashboard') }}" class="navbar-button">Return to Dashboard</a>
             @else
@@ -190,11 +191,12 @@
         </div>
     </nav>
 
-    {{-- Main Content --}}
+    {{-- Konten utama untuk menampilkan ringkasan booking --}}
     <main class="main-content">
         <div class="content-box">
             <h2 class="form-title">Booking Summary by Date</h2>
 
+            {{-- Form filter untuk memilih rentang tanggal --}}
             <div class="filter-container">
                 <form class="division-filter-form" method="GET" action="{{ route('bookings.export-filter') }}">
                     <label for="start_date">From Date:</label>
@@ -207,6 +209,7 @@
                 </form>
             </div>
 
+            {{-- Menampilkan tabel data jika ada booking yang ditemukan --}}
             @if (!empty($bookings) && count($bookings) > 0)
                 <table class="data-table">
                     <thead>
@@ -233,14 +236,15 @@
                     </tbody>
                 </table>
 
+                {{-- Form untuk mengunduh rekap dalam format PDF --}}
                 <form method="POST" action="{{ route('bookings.rekap.pdf') }}" target="_blank" style="margin-top: 1.5rem; text-align: right;">
                     @csrf
                     <input type="hidden" name="start_date" value="{{ request('start_date') }}">
                     <input type="hidden" name="end_date" value="{{ request('end_date') }}">
                     <button type="submit" class="form-button" style="background-color: #198754; padding: 0.6rem 1.2rem;">Download PDF</button>
                 </form>
-
             @elseif(request()->has('start_date') && request()->has('end_date'))
+                {{-- Pesan jika tidak ada data booking untuk rentang tanggal yang dipilih --}}
                 <p style="text-align: center; margin-top: 2rem; font-size: 1.1rem; color: #4b5563;">No data available for the selected date range.</p>
             @endif
         </div>

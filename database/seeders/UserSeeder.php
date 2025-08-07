@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * Class UserSeeder
+ * @package Database\Seeders
+ *
+ * Seeder untuk mengisi tabel 'users' dengan user super admin dan user admin untuk setiap divisi.
+ */
 class UserSeeder extends Seeder
 {
+    /**
+     * Jalankan database seeds.
+     */
     public function run(): void
     {
         // Hapus user lama yang role-nya 'user'
@@ -18,7 +27,7 @@ class UserSeeder extends Seeder
         if (!DB::table('users')->where('email', 'superadmin')->exists()) {
             DB::table('users')->insert([
                 'name'        => 'Super Admin',
-                'email'       => 'superadmin',       // cukup 'superadmin'
+                'email'       => 'superadmin',
                 'password'    => Hash::make('password'),
                 'role'        => 'super_admin',
                 'division_id' => null,
@@ -31,13 +40,13 @@ class UserSeeder extends Seeder
         $divisions = DB::table('divisions')->get();
 
         foreach ($divisions as $division) {
-            $slug = Str::slug($division->name, '_'); // misal 'kapal_perang'
+            $slug = Str::slug($division->name, '_');
             $name = 'Admin Divisi ' . $division->name;
 
             if (!DB::table('users')->where('email', $slug)->exists()) {
                 DB::table('users')->insert([
                     'name'        => $name,
-                    'email'       => $slug,              // cukup slug, tanpa @example.com
+                    'email'       => $slug,
                     'password'    => Hash::make('password'),
                     'role'        => 'admin',
                     'division_id' => $division->id,

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Bookings - Admin</title>
+    <title>Manage Bookings</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +14,10 @@
 </head>
 <body class="admin-bookings-page">
 
+{{-- Struktur dasar halaman dengan wrapper --}}
 <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
 
+    {{-- Bagian navbar --}}
     <nav class="navbar">
         @auth
         @php
@@ -26,6 +28,7 @@
             Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
         </div>
 
+        {{-- Link navigasi --}}
         <div class="navbar-links">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create', 'booking/create') ? 'active' : '' }}">Booking</a>
@@ -44,10 +47,12 @@
         @endauth
     </nav>
     
+    {{-- Konten utama halaman --}}
     <main class="main-content">
         <div class="content-box">
             <h2>Manage Bookings</h2>
             
+            {{-- Menampilkan pesan sukses dari session jika ada --}}
             @if(session('success'))
                 <div class="alert-success">{{ session('success') }}</div>
             @endif
@@ -65,6 +70,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- Loop untuk menampilkan daftar booking --}}
                         @forelse($bookings as $b)
                         <tr>
                             <td data-label="User">{{ $b->user->name }}</td>
@@ -75,12 +81,15 @@
                                 <span class="status status-{{ $b->status }}">{{ ucfirst($b->status) }}</span>
                             </td>
                             <td data-label="Action">
+                                {{-- Tombol aksi hanya ditampilkan jika status booking 'pending' --}}
                                 @if($b->status == 'pending')
                                     <div style="display: flex; gap: 5px;">
+                                        {{-- Form untuk menyetujui booking --}}
                                         <form method="POST" action="{{ url('/admin/bookings/'.$b->id.'/approve') }}" style="display:inline-block;">
                                             @csrf @method('PATCH')
                                             <button type="submit" class="btn-action approve">Approve</button>
                                         </form>
+                                        {{-- Form untuk menolak booking --}}
                                         <form method="POST" action="{{ url('/admin/bookings/'.$b->id.'/reject') }}" style="display:inline-block;">
                                             @csrf @method('PATCH')
                                             <button type="submit" class="btn-action reject">Reject</button>
@@ -102,18 +111,17 @@
                 </table>
             </div>
 
-            <!-- Pagination Start -->
             @if ($bookings instanceof \Illuminate\Pagination\LengthAwarePaginator && $bookings->hasPages())
                 <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
+                        {{-- Link ke halaman sebelumnya --}}
                         @if ($bookings->onFirstPage())
                             <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
                         @else
                             <li><a href="{{ $bookings->previousPageUrl() }}" rel="prev">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
+                        {{-- Menampilkan link halaman --}}
                         @foreach ($bookings->links()->elements as $element)
                             {{-- "Three Dots" Separator --}}
                             @if (is_string($element))
@@ -132,7 +140,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
+                        {{-- Link ke halaman berikutnya --}}
                         @if ($bookings->hasMorePages())
                             <li><a href="{{ $bookings->nextPageUrl() }}" rel="next">&raquo;</a></li>
                         @else
@@ -141,9 +149,7 @@
                     </ul>
                 </div>
             @endif
-            <!-- Pagination End -->
-
-        </div>
+            </div>
     </main>
 
 </div>

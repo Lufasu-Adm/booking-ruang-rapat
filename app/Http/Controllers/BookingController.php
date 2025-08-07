@@ -11,16 +11,31 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller as BaseController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
-use Carbon\Carbon; // Pastikan Carbon di-import
+use Carbon\Carbon;
 
+/**
+ * Class BookingController
+ * @package App\Http\Controllers
+ *
+ * Controller untuk mengelola semua fungsionalitas terkait booking ruangan.
+ * Meliputi pembuatan, persetujuan, penolakan, hingga rekapitulasi.
+ */
 class BookingController extends BaseController
 {
+    /**
+     * BookingController constructor.
+     * Menerapkan middleware 'auth' untuk semua metode di controller ini.
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    // Riwayat booking milik sendiri
+    /**
+     * Menampilkan riwayat booking milik pengguna yang sedang login.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         $user = auth()->user();
@@ -31,7 +46,11 @@ class BookingController extends BaseController
         return view('bookings.index', compact('bookings'));
     }
 
-    // Form booking
+    /**
+     * Menampilkan form untuk membuat booking baru.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         $divisions = Division::all();
@@ -39,7 +58,12 @@ class BookingController extends BaseController
         return view('bookings.create', compact('rooms', 'divisions'));
     }
 
-    // Simpan booking
+    /**
+     * Menyimpan data booking baru ke database.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -97,7 +121,11 @@ class BookingController extends BaseController
         return redirect()->route('bookings.index')->with('success', 'Booking berhasil dibuat.');
     }
 
-    // Daftar booking pending (untuk admin divisi)
+    /**
+     * Menampilkan daftar booking dengan status 'pending' untuk admin divisi.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function all()
     {
         $user = auth()->user();
@@ -109,7 +137,12 @@ class BookingController extends BaseController
         return view('admin.bookings', compact('bookings'));
     }
 
-    // Approve
+    /**
+     * Menyetujui sebuah booking.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function approve($id)
     {
         $user = auth()->user();
@@ -121,7 +154,12 @@ class BookingController extends BaseController
         return back()->with('success', 'Booking disetujui.');
     }
 
-    // Reject
+    /**
+     * Menolak sebuah booking.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function reject($id)
     {
         $user = auth()->user();
@@ -133,28 +171,35 @@ class BookingController extends BaseController
         return back()->with('success', 'Booking ditolak.');
     }
 
-    // Menampilkan daftar peserta hadir
+    /**
+     * Menampilkan daftar peserta yang hadir untuk sebuah booking.
+     *
+     * @param Booking $booking
+     * @return \Illuminate\Contracts\View\View
+     */
     public function showAttendees(Booking $booking)
     {
         $user = auth()->user();
 
-        // --- PERBAIKAN LOGIKA HAK AKSES DI SINI ---
         $isSuperAdmin = strtolower($user->role) === 'super_admin';
-        $isAdmin = strtolower($user->role) === 'admin'; // Cukup periksa apakah perannya admin
+        $isAdmin = strtolower($user->role) === 'admin';
         $isTheBooker = $user->id === $booking->user_id;
 
-        // Izinkan jika salah satu dari kondisi di atas terpenuhi
         if (! ($isSuperAdmin || $isAdmin || $isTheBooker)) {
             abort(403, 'ACCESS DENIED');
         }
-        // --- AKHIR PERBAIKAN ---
 
         $attendees = $booking->attendances()->get();
 
         return view('attendance.attendees', compact('booking', 'attendees'));
     }
 
-    // Tampilkan form filter + preview data
+    /**
+     * Menampilkan form filter dan preview rekap booking.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function showExportFilter(Request $request)
     {
         $startDate = $request->query('start_date');
@@ -184,11 +229,16 @@ class BookingController extends BaseController
         if (strtolower($user->role) === 'super_admin') {
             return view('bookings.superadmin_rekap_filter', $data);
         }
-        
+
         return view('bookings.rekap_filter', $data);
     }
 
-    // Export PDF berdasarkan filter tanggal
+    /**
+     * Mengekspor rekap booking dalam rentang tanggal tertentu ke format PDF.
+     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function exportPdf(Request $request)
     {
         $request->validate([
@@ -199,7 +249,7 @@ class BookingController extends BaseController
         $start = $request->start_date;
         $end = $request->end_date;
         $user = auth()->user();
-        
+
         $query = Booking::with(['room.division', 'user']);
         $title = 'Rekap Booking Ruangan';
 
@@ -215,9 +265,9 @@ class BookingController extends BaseController
                         ->whereDate('date', '<=', $end)
                         ->orderBy('date', 'asc')
                         ->get();
-        
+
         $groupedBookings = $bookings->groupBy('room.division.name');
-        
+
         $pdf = PDF::loadView('bookings.rekap_pdf', [
             'title' => $title,
             'groupedBookings' => $groupedBookings,
@@ -230,7 +280,11 @@ class BookingController extends BaseController
         return $pdf->download('RekapBooking_' . now()->format('Ymd_His') . '.pdf');
     }
 
-    // Export semua booking tanpa filter
+    /**
+     * Mengekspor semua rekap booking ke format PDF tanpa filter tanggal.
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function rekapSemua()
     {
         $user = auth()->user();

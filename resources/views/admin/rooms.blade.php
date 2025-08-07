@@ -9,24 +9,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @vite('resources/css/admin.css')
-    @vite('resources/css/superadmin.css') {{-- Pastikan CSS paginasi juga dimuat --}}
+    @vite('resources/css/superadmin.css') {{-- Memuat CSS untuk pagination --}}
 </head>
 <body class="admin-rooms-page">
 
+{{-- Struktur dasar halaman dengan wrapper --}}
 <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
 
+    {{-- Bagian navbar --}}
     <nav class="navbar">
         @auth
         @php
-                $name = auth()->user()->name;
-                $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
-            @endphp
+            $name = auth()->user()->name;
+            // Logika untuk membersihkan nama user dari prefix role
+            $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
+        @endphp
         <div class="navbar-left">
             <div class="navbar-user-info">
                 Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
             </div>
         </div>
 
+        {{-- Link navigasi --}}
         <div class="navbar-links">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create') ? 'active' : '' }}">Booking</a>
@@ -36,6 +40,7 @@
             <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
         </div>
 
+        {{-- Tombol logout --}}
         <div class="navbar-right">
             <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                 @csrf
@@ -45,10 +50,12 @@
         @endauth
     </nav>
 
+    {{-- Konten utama halaman --}}
     <main class="main-content">
         <div class="content-box">
             <div class="page-header">
                 <h2>Manage Rooms</h2>
+                {{-- Tombol tambah ruangan, hanya untuk user dengan role 'admin' --}}
                 @if(auth()->user()->role === 'admin')
                     <a href="{{ route('rooms.create') }}" class="btn btn-primary">+ Add Room</a>
                 @endif
@@ -65,12 +72,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Loop untuk menampilkan daftar ruangan --}}
                     @forelse($rooms as $room)
                         <tr>
                             <td>{{ $room->name }}</td>
                             <td>{{ $room->capacity }} people</td>
                             <td>{{ $room->description ?? '-' }}</td>
                             <td>
+                                {{-- Menampilkan status ketersediaan ruangan --}}
                                 @if($room->is_available)
                                     <span class="status status-available">Available</span>
                                 @else
@@ -78,6 +87,7 @@
                                 @endif
                             </td>
                             <td class="action-cell">
+                                {{-- Tombol aksi hanya ditampilkan jika user adalah 'admin' --}}
                                 @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary">Edit</a>
                                     <form method="POST" action="{{ route('rooms.destroy', $room->id) }}" style="display:inline;">
@@ -99,19 +109,18 @@
                     @endforelse
                 </tbody>
             </table>
-            
-            <!-- Pagination Start -->
+
             @if ($rooms->hasPages())
                 <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
+                        {{-- Link ke halaman sebelumnya --}}
                         @if ($rooms->onFirstPage())
                             <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
                         @else
                             <li><a href="{{ $rooms->previousPageUrl() }}" rel="prev">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
+                        {{-- Menampilkan link halaman --}}
                         @foreach ($rooms->links()->elements as $element)
                             {{-- "Three Dots" Separator --}}
                             @if (is_string($element))
@@ -130,7 +139,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
+                        {{-- Link ke halaman berikutnya --}}
                         @if ($rooms->hasMorePages())
                             <li><a href="{{ $rooms->nextPageUrl() }}" rel="next">&raquo;</a></li>
                         @else
@@ -139,8 +148,7 @@
                     </ul>
                 </div>
             @endif
-            <!-- Pagination End -->
-        </div>
+            </div>
     </main>
 
 </div>

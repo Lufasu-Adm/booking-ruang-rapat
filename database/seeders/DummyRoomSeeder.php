@@ -5,8 +5,18 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class DummyRoomSeeder
+ * @package Database\Seeders
+ *
+ * Seeder untuk mengisi tabel 'rooms' dengan data ruangan dummy.
+ * Setiap divisi akan memiliki salinan ruangan dari template yang disediakan.
+ */
 class DummyRoomSeeder extends Seeder
 {
+    /**
+     * Jalankan database seeds.
+     */
     public function run(): void
     {
         $divisions = DB::table('divisions')->get();
@@ -36,7 +46,7 @@ class DummyRoomSeeder extends Seeder
             $floor = 1; // Reset floor for each division
             foreach ($roomTemplates as $room) {
                 $allRooms[] = [
-                    'name' => $room['name'] . ' - ' . $division->name, 
+                    'name' => $room['name'] . ' - ' . $division->name,
                     'description' => $division->name,
                     'capacity' => $room['capacity'],
                     'location' => 'Gedung A Lantai ' . $floor,

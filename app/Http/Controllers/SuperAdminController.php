@@ -7,23 +7,44 @@ use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Routing\Controller; // Tambahkan ini jika belum ada
 
+/**
+ * Class SuperAdminController
+ * @package App\Http\Controllers
+ *
+ * Controller yang mengelola fungsionalitas khusus untuk Super Admin.
+ * Termasuk manajemen divisi, user, dan password admin.
+ */
 class SuperAdminController extends Controller
 {
-    // Dashboard utama Super Admin dengan pagination
+    /**
+     * Menampilkan dashboard utama Super Admin dengan daftar divisi yang terpaginasi.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
-        $divisions = Division::with('users')->paginate(5); // PAGINATE DI SINI
+        $divisions = Division::with('users')->paginate(5);
         return view('superadmin.dashboard', compact('divisions'));
     }
 
-    // Form tambah divisi
+    /**
+     * Menampilkan form untuk menambah divisi baru.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('superadmin.divisions.create');
     }
 
-    // Simpan divisi baru beserta admin & user
+    /**
+     * Menyimpan divisi baru beserta user admin default.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -47,7 +68,12 @@ class SuperAdminController extends Controller
         return redirect()->route('superadmin.dashboard')->with('success', 'Divisi berhasil ditambahkan.');
     }
 
-    // Form edit divisi
+    /**
+     * Menampilkan form untuk mengedit divisi.
+     *
+     * @param int $id ID dari divisi.
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit($id)
     {
         $division = Division::with('users')->findOrFail($id);
@@ -57,7 +83,13 @@ class SuperAdminController extends Controller
         return view('superadmin.divisions.edit', compact('division', 'admin', 'user'));
     }
 
-    // Simpan update divisi
+    /**
+     * Memproses pembaruan data divisi dan admin.
+     *
+     * @param Request $request
+     * @param int $id ID dari divisi.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $division = Division::findOrFail($id);
@@ -98,7 +130,12 @@ class SuperAdminController extends Controller
         return redirect()->route('superadmin.dashboard')->with('success', 'Divisi berhasil diperbarui.');
     }
 
-    // Hapus divisi & user-nya
+    /**
+     * Menghapus divisi beserta semua user di dalamnya.
+     *
+     * @param int $id ID dari divisi.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
         DB::transaction(function () use ($id) {
@@ -110,13 +147,25 @@ class SuperAdminController extends Controller
         return redirect()->route('superadmin.dashboard')->with('success', 'Divisi berhasil dihapus.');
     }
 
-    // Form ubah password admin
+    /**
+     * Menampilkan form untuk mengubah password admin.
+     *
+     * @param int $id ID dari user admin.
+     * @return \Illuminate\Contracts\View\View
+     */
     public function editPassword($id)
     {
         $admin = User::where('id', $id)->where('role', 'admin')->firstOrFail();
         return view('superadmin.admins.edit-password', compact('admin'));
     }
 
+    /**
+     * Memproses perubahan password untuk user admin.
+     *
+     * @param Request $request
+     * @param int $id ID dari user admin.
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updatePassword(Request $request, $id)
     {
         $request->validate([

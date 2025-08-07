@@ -5,12 +5,12 @@
     <title>Edit Divisi - Sistem Reservasi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    {{-- Google Fonts --}}
+    {{-- Google Fonts untuk styling --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- CSS Internal --}}
+    {{-- CSS Internal untuk styling halaman --}}
     <style>
         body, html {
             margin: 0;
@@ -179,23 +179,24 @@
 </head>
 <body>
 
+{{-- Wrapper utama halaman --}}
 <div class="page-wrapper">
-    {{-- Navbar Sederhana --}}
+    {{-- Navbar sederhana dengan judul dan tombol kembali --}}
     <nav class="navbar">
         <div class="navbar-title">
             Manajemen Divisi
         </div>
-        {{-- Tombol Kembali dipindahkan ke sini --}}
         <div class="navbar-right">
             <a href="{{ route('superadmin.dashboard') }}" class="navbar-button">Kembali</a>
         </div>
     </nav>
 
-    {{-- Main Content --}}
+    {{-- Konten utama form --}}
     <main class="main-content">
         <div class="form-card">
             <h2 class="form-title">Edit Divisi</h2>
 
+            {{-- Menampilkan pesan error validasi jika ada --}}
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -206,26 +207,30 @@
                 </div>
             @endif
 
+            {{-- Form untuk mengedit data divisi dan admin --}}
             <form action="{{ route('divisions.update', $division->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
+                {{-- Form group untuk Nama Divisi --}}
                 <div class="form-group">
                     <label for="name">Nama Divisi</label>
                     <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $division->name) }}" required>
                 </div>
 
+                {{-- Form group untuk Nama Admin --}}
                 <div class="form-group">
                     <label for="admin_name">Nama Admin</label>
                     <input type="text" id="admin_name" name="admin_name" class="form-control" value="{{ old('admin_name', $admin->name ?? '') }}" required>
                 </div>
 
+                {{-- Form group untuk Email Admin --}}
                 <div class="form-group">
                     <label for="admin_email">Email Admin</label>
                     <input type="email" id="admin_email" name="admin_email" class="form-control" value="{{ old('admin_email', $admin->email ?? '') }}" required>
                 </div>
 
-                {{-- Tombol Batal dihapus dari sini --}}
+                {{-- Tombol submit untuk menyimpan perubahan --}}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </div>

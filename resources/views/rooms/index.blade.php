@@ -13,18 +13,22 @@
 </head>
 <body class="rooms-index-page">
 
+{{-- Struktur dasar halaman dengan wrapper --}}
 <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
 
+    {{-- Bagian navbar --}}
     <nav class="navbar">
         @auth
         @php
             $name = auth()->user()->name;
+            // Logika untuk membersihkan nama user dari prefix role
             $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
         @endphp
         <div class="navbar-user-info">
             Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
         </div>
 
+        {{-- Link navigasi --}}
         <div class="navbar-links">
             <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
@@ -34,6 +38,7 @@
             <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Booking History</a>
         </div>
 
+        {{-- Tombol logout --}}
         <div class="navbar-right">
             <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                 @csrf
@@ -43,21 +48,25 @@
         @endauth
     </nav>
 
+    {{-- Konten utama halaman --}}
     <main class="main-content">
         <div class="content-box">
             <h2>Room List</h2>
 
+            {{-- Menampilkan pesan sukses dari session --}}
             @if(session('success'))
                 <div class="flash-message flash-message-success" style="background-color:#d1fae5; color:#065f46; padding:1rem; border-radius:8px; text-align:center; margin-bottom:1.5rem;">
                     {{ session('success') }}
                 </div>
             @endif
-            
+
+            {{-- Form untuk filter ruangan berdasarkan divisi --}}
             <div class="filter-container">
                 <form method="GET" action="{{ route('rooms.index') }}" class="division-filter-form">
                     <label for="division_id">Filter by Division:</label>
                     <select name="division_id" id="division_id" onchange="this.form.submit()">
                         <option value="">-- All Divisions --</option>
+                        {{-- Loop untuk menampilkan semua divisi sebagai opsi --}}
                         @foreach($divisions as $division)
                             <option value="{{ $division->id }}" {{ (isset($selectedDivision) && $selectedDivision == $division->id) ? 'selected' : '' }}>
                                 {{ $division->name }}
@@ -67,6 +76,7 @@
                 </form>
             </div>
 
+            {{-- Tampilkan tabel ruangan hanya jika ada filter divisi yang dipilih --}}
             @if(request()->filled('division_id'))
             <table class="data-table">
                 <thead>
@@ -80,6 +90,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Loop untuk menampilkan daftar ruangan yang difilter --}}
                     @forelse($rooms as $room)
                     <tr>
                         <td>{{ $room->name }}</td>
@@ -105,25 +116,22 @@
                 </tbody>
             </table>
 
-            <!-- Pagination Start -->
             @if ($rooms instanceof \Illuminate\Pagination\LengthAwarePaginator && $rooms->hasPages())
                 <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
+                        {{-- Link ke halaman sebelumnya --}}
                         @if ($rooms->onFirstPage())
                             <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
                         @else
                             <li><a href="{{ $rooms->previousPageUrl() }}" rel="prev">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
+                        {{-- Menampilkan link halaman --}}
                         @foreach ($rooms->links()->elements as $element)
-                            {{-- "Three Dots" Separator --}}
                             @if (is_string($element))
                                 <li class="disabled" aria-disabled="true"><span>{{ $element }}</span></li>
                             @endif
 
-                            {{-- Array Of Links --}}
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
                                     @if ($page == $rooms->currentPage())
@@ -135,7 +143,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
+                        {{-- Link ke halaman berikutnya --}}
                         @if ($rooms->hasMorePages())
                             <li><a href="{{ $rooms->nextPageUrl() }}" rel="next">&raquo;</a></li>
                         @else
@@ -144,9 +152,8 @@
                     </ul>
                 </div>
             @endif
-            <!-- Pagination End -->
-
             @else
+            {{-- Pesan yang tampil jika tidak ada divisi yang difilter --}}
             <div style="text-align:center; padding: 4rem 2rem; background-color: #f9fafb; border-radius: 8px; margin-top: 1.5rem;">
                 <p style="margin:0; font-size: 1.1rem; color: #6b7280;">Please select a division to display the room list.</p>
             </div>

@@ -13,21 +13,32 @@
 </head>
 <body class="dashboard-page">
 
+    {{-- 
+        Wrapper utama halaman dashboard.
+        Latar belakang diatur menggunakan CSS inline.
+    --}}
     <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
         
+        {{-- 
+            Navbar utama aplikasi.
+            Hanya ditampilkan jika pengguna sudah login.
+        --}}
         <nav class="navbar">
             @auth
             @php
+                // Logika untuk membersihkan nama pengguna dari prefix role
                 $name = auth()->user()->name;
                 $cleanName = preg_replace('/^(USER\s+|ADMIN\s+|SUPERADMIN\s+|DIVISI\s+)+/i', '', $name);
             @endphp
+            {{-- Bagian informasi user di navbar --}}
             <div class="navbar-user-info">
                 Welcome, <strong>{{ strtoupper($cleanName) }}</strong>
             </div>
 
+            {{-- Link navigasi --}}
             <div class="navbar-links">
+                {{-- Link dashboard dengan kelas 'active' jika rute saat ini adalah 'dashboard' --}}
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                {{-- Corrected routeIs to match the route name for consistency --}}
                 <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking.create') ? 'active' : '' }}">Booking</a>
                 <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Bookings</a>
                 <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
@@ -35,6 +46,7 @@
                 <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
             </div>
 
+            {{-- Bagian logout di sisi kanan navbar --}}
             <div class="navbar-right">
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
@@ -44,8 +56,10 @@
             @endauth
         </nav>
 
+        {{-- Konten utama halaman --}}
         <main class="main-content">
             @auth
+                {{-- Tombol untuk mengunduh rekap PDF, hanya untuk role 'admin' atau 'superadmin' --}}
                 @if (auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <div style="text-align: right; margin-bottom: 1rem; margin-right: 2rem;">
                         <a href="{{ route('bookings.export-filter') }}" class="rekap-button" style="background-color: #306199; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
@@ -54,6 +68,7 @@
                     </div>
                 @endif
 
+                {{-- Bagian kartu (cards) yang menampilkan statistik --}}
                 <section class="cards-container">
                     <div class="card">
                         <h3>Total Rooms</h3>
@@ -68,8 +83,8 @@
                         <p style="font-size: 2.5rem; font-weight: 700;">{{ $activeBookings ?? 5 }}</p>
                     </div>
                     <div class="card" style="text-align: center;">
-                        {{-- Changed to format() to ensure the date is always in English --}}
                         <p style="font-size: 1.5rem;">{{ \Carbon\Carbon::now()->format('l, d F Y') }}</p>
+                        {{-- Jam real-time yang diperbarui oleh JavaScript --}}
                         <h1 id="live-time" style="font-size: 3.5rem; font-weight: 700;">{{ \Carbon\Carbon::now()->format('H:i') }}</h1>
                     </div>
                 </section>
@@ -77,10 +92,11 @@
         </main>
     </div>
 
+    {{-- Script JavaScript untuk memperbarui jam secara real-time --}}
     <script>
         function updateTime() {
             const now = new Date();
-            // The time format is already correctly set to 24-hour format
+            // Format waktu ke format 24 jam (HH:mm:ss)
             const timeString = now.toLocaleTimeString("en-GB", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -92,7 +108,9 @@
                 timeElement.textContent = timeString;
             }
         }
+        // Perbarui jam setiap 1 detik
         setInterval(updateTime, 1000);
+        // Panggil pertama kali agar waktu langsung muncul
         updateTime();
     </script>
 </body>

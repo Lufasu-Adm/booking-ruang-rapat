@@ -4,8 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateUsersTable
+ * @package Database\Migrations
+ *
+ * Migrasi untuk membuat tabel 'users', 'password_reset_tokens', dan 'sessions'.
+ * Ini adalah migrasi standar Laravel untuk sistem autentikasi.
+ */
 return new class extends Migration
 {
+    /**
+     * Jalankan migrasi.
+     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -14,13 +24,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // ✅ Tambahkan kolom role (diperlukan untuk user, admin, super_admin)
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user');
-
-            // ✅ Tambahkan relasi ke tabel divisions (nullable untuk super_admin)
             $table->foreignId('division_id')->nullable()->constrained('divisions')->nullOnDelete();
-
             $table->rememberToken();
             $table->timestamps();
         });
@@ -41,6 +46,9 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Batalkan migrasi.
+     */
     public function down(): void
     {
         Schema::dropIfExists('users');

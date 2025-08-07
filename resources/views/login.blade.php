@@ -16,6 +16,7 @@
     padding: 0;
 ">
 
+    {{-- Kotak utama form login --}}
     <div style="
         background-color: #ffffff;
         padding: 2rem;
@@ -25,6 +26,7 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         text-align: center;
     ">
+        {{-- Judul form --}}
         <div style="
             font-size: 1.875rem;
             font-weight: bold;
@@ -32,21 +34,24 @@
             margin-bottom: 1.5rem;
         ">Sign in</div>
 
-        {{-- Flash Message --}}
+        {{-- Menampilkan pesan sukses dari session jika ada --}}
         @if(session('success'))
             <div style="text-align: center; margin-bottom: 1rem; font-size: 0.875rem; color: #16a34a;">
                 {{ session('success') }}
             </div>
         @endif
+        {{-- Menampilkan pesan error dari session jika ada --}}
         @if(session('error'))
             <div style="text-align: center; margin-bottom: 1rem; font-size: 0.875rem; color: #dc2626;">
                 {{ session('error') }}
             </div>
         @endif
 
+        {{-- Form login --}}
         <form method="POST" action="{{ route('login.store') }}">
             @csrf
 
+            {{-- Input untuk email/username --}}
             <label for="email" style="display: block; text-align: left; font-weight: 500; margin-bottom: 0.25rem;">
                 Division (e.g. kapal_perang)
             </label>
@@ -63,6 +68,7 @@
                 box-sizing: border-box;
             ">
 
+            {{-- Input untuk password --}}
             <label for="password" style="display: block; text-align: left; font-weight: 500; margin-bottom: 0.25rem;">
                 Password
             </label>
@@ -79,6 +85,7 @@
                 box-sizing: border-box;
             ">
 
+            {{-- Tombol submit --}}
             <button type="submit" style="
                 display: block;
                 width: 100%;
@@ -92,8 +99,8 @@
                 cursor: pointer;
                 transition: background-color 0.3s ease;
                 box-sizing: border-box;
-            " 
-            onmouseover="this.style.backgroundColor='#254d77'" 
+            "
+            onmouseover="this.style.backgroundColor='#254d77'"
             onmouseout="this.style.backgroundColor='#306199'">
                 LOGIN
             </button>

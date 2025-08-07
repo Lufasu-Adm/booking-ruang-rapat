@@ -16,9 +16,10 @@
 
     <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
         
-<nav class="navbar">
+        <nav class="navbar">
             @auth
             @php
+                // Logika untuk membersihkan nama user dari prefix role
                 $name = auth()->user()->name;
                 $cleanName = preg_replace('/^(USER\s+|ADMIN\s+|SUPERADMIN\s+|DIVISI\s+)+/i', '', $name);
             @endphp
@@ -102,6 +103,7 @@
                         <label for="date" class="form-label">Meeting Date</label>
                         <input id="date" type="date" name="date" value="{{ old('date') }}" required class="form-input">
                     </div>
+                    
                     <div class="form-button-wrapper">
                         <button type="submit" class="form-button">SUBMIT RESERVATION</button>
                     </div>
@@ -155,5 +157,4 @@
         });
     </script>
 </body>
-
 </html>

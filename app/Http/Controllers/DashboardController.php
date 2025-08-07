@@ -9,10 +9,19 @@ use App\Models\Booking;
 use App\Models\Division;
 use Carbon\Carbon;
 
+/**
+ * Class DashboardController
+ * @package App\Http\Controllers
+ *
+ * Controller untuk mengelola tampilan dashboard utama.
+ * Tampilan dashboard berbeda berdasarkan peran pengguna (super_admin vs admin).
+ */
 class DashboardController extends Controller
 {
     /**
-     * Tampilkan dashboard untuk superadmin (melihat seluruh divisi).
+     * Tampilkan dashboard untuk superadmin.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function adminDashboard()
     {
@@ -21,7 +30,10 @@ class DashboardController extends Controller
     }
 
     /**
-     * Tampilkan dashboard utama (baik untuk admin atau superadmin).
+     * Tampilkan dashboard utama.
+     * Data yang ditampilkan akan disesuaikan dengan peran pengguna yang sedang login.
+     *
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {

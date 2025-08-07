@@ -5,10 +5,17 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class DivisionSeeder
+ * @package Database\Seeders
+ *
+ * Seeder untuk mengisi tabel 'divisions' dengan data dummy.
+ * Data diambil dari array mentah dan dimasukkan ke tabel.
+ */
 class DivisionSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Jalankan database seeds.
      */
     public function run(): void
     {

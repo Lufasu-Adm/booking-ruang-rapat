@@ -13,26 +13,30 @@
 </head>
 <body class="admin-booking-history-page">
 
+{{-- Struktur dasar halaman dengan wrapper --}}
 <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
 
+    {{-- Bagian navbar --}}
     <nav class="navbar">
-            @auth
-            @php
-                $name = auth()->user()->name;
-                $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
-            @endphp
-            <div class="navbar-user-info">
-                Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
-            </div>
+        @auth
+        @php
+            $name = auth()->user()->name;
+            // Logika untuk membersihkan nama user dari prefix role
+            $cleanName = preg_replace('/\b(USER|ADMIN|SUPERADMIN|DIVISI)\b\s*/i', '', $name);
+        @endphp
+        <div class="navbar-user-info">
+            Welcome, <strong>{{ strtoupper(trim($cleanName)) }}</strong>
+        </div>
 
+        {{-- Link navigasi --}}
         <div class="navbar-links">
-                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
-                <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Booking</a>
-                <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
-                <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
-                <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
-            </div>
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
+            <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Manage Booking</a>
+            <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms') ? 'active' : '' }}">Manage Rooms</a>
+            <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
+            <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">History</a>
+        </div>
 
         <div class="navbar-right">
             <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
@@ -43,10 +47,12 @@
         @endauth
     </nav>
 
+    {{-- Konten utama halaman --}}
     <main class="main-content">
         <div class="content-box">
             <h2>Booking History</h2>
 
+            {{-- Menampilkan pesan sukses dari session --}}
             @if(session('success'))
                 <div class="alert-success">{{ session('success') }}</div>
             @endif
@@ -63,10 +69,11 @@
                         <th>Booking Time</th>
                         <th>PIC</th>
                         <th>Booking Status</th>
-                        <th>Attendance List</th> {{-- <-- KOLOM BARU --}}
+                        <th>Attendance List</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Loop untuk menampilkan daftar riwayat booking --}}
                     @forelse($bookings as $b)
                         <tr>
                             <td data-label="Booking Room">{{ $b->room->name }}</td>
@@ -86,19 +93,20 @@
                             </td>
                             <td data-label="PIC">{{ $b->pic?->name ?? $b->user->name }}</td>
                             <td data-label="Booking Status"><span class="status status-{{ $b->status }}">{{ ucfirst($b->status) }}</span></td>
-                            
-                            {{-- PERBAIKAN DI SINI: Menampilkan QR Code dan Tombol --}}
+
+                            {{-- Menampilkan QR Code dan tombol "View Attendees" jika booking sudah disetujui --}}
                             <td data-label="Attendance List">
                                 @if($b->status === 'approved')
                                     <div style="text-align:center; min-width: 120px;">
+                                        {{-- Menghasilkan QR Code yang mengarah ke halaman daftar hadir --}}
                                         {!! QrCode::size(80)->generate(route('attendance.create', $b->id)) !!}
+                                        {{-- Tombol untuk melihat daftar peserta yang hadir --}}
                                         <a href="{{ route('admin.bookings.attendees', $b->id) }}" class="btn-action" style="display:block; margin-top:5px; background-color: #0d6efd; color: white; text-align: center;">View Attendees</a>
                                     </div>
                                 @else
                                     -
                                 @endif
                             </td>
-                            {{-- AKHIR PERBAIKAN --}}
                         </tr>
                     @empty
                         <tr>
@@ -108,18 +116,17 @@
                 </tbody>
             </table>
 
-            <!-- Pagination Start -->
             @if ($bookings instanceof \Illuminate\Pagination\LengthAwarePaginator && $bookings->hasPages())
                 <div class="pagination-wrapper" style="display: flex; justify-content: center; margin-top: 2rem;">
                     <ul class="pagination">
-                        {{-- Previous Page Link --}}
+                        {{-- Link ke halaman sebelumnya --}}
                         @if ($bookings->onFirstPage())
                             <li class="disabled" aria-disabled="true"><span>&laquo;</span></li>
                         @else
                             <li><a href="{{ $bookings->previousPageUrl() }}" rel="prev">&laquo;</a></li>
                         @endif
 
-                        {{-- Pagination Elements --}}
+                        {{-- Menampilkan link halaman --}}
                         @foreach ($bookings->links()->elements as $element)
                             {{-- "Three Dots" Separator --}}
                             @if (is_string($element))
@@ -138,7 +145,7 @@
                             @endif
                         @endforeach
 
-                        {{-- Next Page Link --}}
+                        {{-- Link ke halaman berikutnya --}}
                         @if ($bookings->hasMorePages())
                             <li><a href="{{ $bookings->nextPageUrl() }}" rel="next">&raquo;</a></li>
                         @else
@@ -147,8 +154,7 @@
                     </ul>
                 </div>
             @endif
-            <!-- Pagination End -->
-        </div>
+            </div>
     </main>
 
 </div>

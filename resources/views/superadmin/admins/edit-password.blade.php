@@ -188,8 +188,9 @@
 </head>
 <body>
 
+{{-- Wrapper utama halaman --}}
 <div class="page-wrapper">
-    {{-- Navbar Sederhana --}}
+    {{-- Navbar sederhana dengan judul dan tombol kembali --}}
     <nav class="navbar">
         <div class="navbar-title">
             Manajemen Admin
@@ -199,11 +200,12 @@
         </div>
     </nav>
 
-    {{-- Main Content --}}
+    {{-- Konten utama form --}}
     <main class="main-content">
         <div class="form-card">
             <h2 class="form-title">Ganti Password Admin</h2>
 
+            {{-- Menampilkan pesan error validasi jika ada --}}
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -214,24 +216,29 @@
                 </div>
             @endif
 
+            {{-- Form untuk mengubah password admin --}}
             <form action="{{ route('superadmin.admins.update_password', $admin->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
+                {{-- Menampilkan informasi admin yang passwordnya akan diubah --}}
                 <div class="admin-info">
                     <label>Admin: <strong>{{ $admin->name }}</strong> ({{ $admin->email }})</label>
                 </div>
 
+                {{-- Form group untuk password baru --}}
                 <div class="form-group">
                     <label for="password">Password Baru</label>
                     <input type="password" id="password" name="password" class="form-control" required>
                 </div>
 
+                {{-- Form group untuk konfirmasi password baru --}}
                 <div class="form-group">
                     <label for="password_confirmation">Konfirmasi Password</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
                 </div>
 
+                {{-- Tombol submit untuk mengubah password --}}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Ubah Password</button>
                 </div>

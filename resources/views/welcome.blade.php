@@ -93,14 +93,17 @@
 </head>
 <body>
 
-    {{-- Konten Utama --}}
+    {{-- Konten Utama Halaman Landing Page --}}
     <div class="wrapper">
         <div class="content">
             <h1>Peminjaman Ruang Rapat</h1>
             <p>Kelola dan pesan ruang rapat dengan mudah dan efisien.</p>
             
-            {{-- Link login dan register --}}
+            {{-- Tombol untuk menuju halaman login --}}
             <a href="{{ route('login') }}" class="btn">Login</a>
+            
+            {{-- Tombol register (dapat diaktifkan jika fitur registrasi diperlukan) --}}
+            {{-- <a href="{{ route('register') }}" class="btn btn-register">Register</a> --}}
         </div>
     </div>
 

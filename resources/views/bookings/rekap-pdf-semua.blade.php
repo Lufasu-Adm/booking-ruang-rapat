@@ -15,13 +15,16 @@
     </style>
 </head>
 <body>
+    {{-- Judul dokumen rekapitulasi --}}
     <h2>All Divisions Booking Summary</h2>
 
+    {{-- Informasi pencetakan --}}
     <p><strong>Print Date:</strong> {{ now()->format('d-m-Y') }}</p>
     <p><strong>Printed By:</strong> {{ $printedBy }}</p>
 
-    {{-- Iterate through each division --}}
+    {{-- Loop untuk setiap divisi dan menampilkan booking yang terkait --}}
     @forelse($bookingsByDivision as $divisionName => $bookings)
+        {{-- Judul untuk setiap divisi --}}
         <h3>Division: {{ $divisionName ?: 'No Division' }}</h3>
         <table>
             <thead>
@@ -35,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- Iterate through each booking within the division --}}
+                {{-- Loop untuk setiap booking di dalam divisi --}}
                 @forelse($bookings as $booking)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
@@ -59,6 +62,7 @@
             </tbody>
         </table>
     @empty
+        {{-- Pesan jika tidak ada data booking sama sekali --}}
         <p style="text-align:center; margin-top: 2rem;">No booking data available at all.</p>
     @endforelse
 

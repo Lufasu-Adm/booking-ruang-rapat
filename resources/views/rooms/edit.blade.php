@@ -13,25 +13,31 @@
 </head>
 <body class="form-page">
 
+    {{-- Wrapper utama halaman dengan gambar latar belakang --}}
     <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
         
+        {{-- Bagian navbar --}}
         <nav class="navbar">
             @auth
             <div class="navbar-left">
                 <div class="navbar-user-info">
+                    {{-- Menampilkan nama user --}}
                     Welcome, <strong>{{ strtoupper(auth()->user()->clean_name ?? auth()->user()->name) }}</strong>
                 </div>
             </div>
 
+            {{-- Link navigasi --}}
             <div class="navbar-links">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('booking.create') }}" class="{{ request()->routeIs('booking/create') ? 'active' : '' }}">Booking</a>
                 <a href="{{ route('admin.bookings') }}" class="{{ request()->routeIs('admin.bookings') ? 'active' : '' }}">Kelola Booking</a>
+                {{-- Link untuk mengelola ruangan, aktif jika di halaman kelola atau edit ruangan --}}
                 <a href="{{ route('admin.rooms') }}" class="{{ request()->routeIs('admin.rooms', 'rooms.edit') ? 'active' : '' }}">Kelola Ruangan</a>
                 <a href="{{ route('rooms.index') }}" class="{{ request()->routeIs('rooms.index') ? 'active' : '' }}">Room List</a>
                 <a href="{{ route('bookings.index') }}" class="{{ request()->routeIs('bookings.index') ? 'active' : '' }}">Riwayat</a>
             </div>
 
+            {{-- Tombol logout --}}
             <div class="navbar-right">
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
@@ -41,14 +47,17 @@
             @endauth
         </nav>
 
+        {{-- Konten utama halaman --}}
         <main class="main-content">
             <div class="form-card">
                 <h2 class="form-title">Edit Ruangan</h2>
 
+                {{-- Menampilkan pesan sukses dari session --}}
                 @if(session('success'))
                     <div class="alert-success">{{ session('success') }}</div>
                 @endif
 
+                {{-- Menampilkan pesan error validasi jika ada --}}
                 @if($errors->any())
                     <div class="alert-error">
                         @foreach($errors->all() as $error)
@@ -57,15 +66,17 @@
                     </div>
                 @endif
 
+                {{-- Form untuk mengupdate data ruangan --}}
                 <form method="POST" action="{{ route('rooms.update', $room->id) }}">
                     @csrf
                     @method('PUT')
 
-                    {{-- File _form.blade.php akan di-render di sini --}}
-                    {{-- Pastikan file tersebut menggunakan class: .form-group, .form-label, .form-input --}}
+                    {{-- Mengimpor form dari partial view _form.blade.php --}}
                     @include('rooms._form', ['room' => $room])
 
+                    {{-- Tombol untuk menyimpan perubahan --}}
                     <button type="submit" class="form-button">Update Ruangan</button>
+                    {{-- Tombol kembali ke daftar ruangan, disesuaikan dengan role user --}}
                     <a href="{{ route(auth()->user()->role === 'super admin' ? 'rooms.index' : 'admin.rooms') }}" class="form-footer">← Kembali ke Daftar Ruangan</a>
                 </form>
             </div>

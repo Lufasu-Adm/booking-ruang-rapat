@@ -7,46 +7,65 @@ use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class RoomController
+ * @package App\Http\Controllers
+ *
+ * Controller yang mengelola semua fungsionalitas terkait data ruangan.
+ * Meliputi melihat, menambah, mengedit, dan menghapus ruangan.
+ */
 class RoomController extends Controller
 {
-    // Semua: Lihat semua ruangan, bisa filter by divisi
+    /**
+     * Menampilkan daftar semua ruangan dengan opsi filter berdasarkan divisi.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index(Request $request)
-{
-    $divisions = Division::all();
-    $selectedDivision = $request->input('division_id');
-    $perPage = 5; // Tentukan jumlah item per halaman
+    {
+        $divisions = Division::all();
+        $selectedDivision = $request->input('division_id');
+        $perPage = 5;
 
-    $roomsQuery = Room::with('division');
+        $roomsQuery = Room::with('division');
 
-    if ($selectedDivision) {
-        $roomsQuery->where('division_id', $selectedDivision);
+        if ($selectedDivision) {
+            $roomsQuery->where('division_id', $selectedDivision);
+        }
+
+        $rooms = $roomsQuery->paginate($perPage)->appends($request->query());
+
+        return view('rooms.index', compact('rooms', 'divisions', 'selectedDivision'));
     }
 
-    // Ganti ->get() menjadi ->paginate()
-    // appends() digunakan agar filter divisi tidak hilang saat pindah halaman
-    $rooms = $roomsQuery->paginate($perPage)->appends($request->query());
+    /**
+     * Menampilkan daftar ruangan untuk halaman admin.
+     * Super admin dapat melihat semua ruangan, sedangkan admin hanya melihat ruangan di divisinya.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function adminIndex()
+    {
+        $user = Auth::user();
+        $perPage = 5;
 
-    return view('rooms.index', compact('rooms', 'divisions', 'selectedDivision'));
-}
+        if ($user->role === 'super_admin') {
+            $rooms = Room::with('division')->paginate($perPage);
+        } else {
+            $rooms = Room::with('division')
+                ->where('division_id', $user->division_id)
+                ->paginate($perPage);
+        }
 
-    // ADMIN: Lihat semua ruangan dari divisinya
-public function adminIndex()
-{
-    $user = Auth::user();
-    $perPage = 5; // Tentukan jumlah item per halaman
-
-    if ($user->role === 'super_admin') {
-        $rooms = Room::with('division')->paginate($perPage);
-    } else {
-        $rooms = Room::with('division')
-            ->where('division_id', $user->division_id)
-            ->paginate($perPage);
+        return view('admin.rooms', compact('rooms'));
     }
 
-    return view('admin.rooms', compact('rooms'));
-}
-
-    // ADMIN: Form tambah ruangan
+    /**
+     * Menampilkan form untuk membuat ruangan baru.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function create()
     {
         $user = Auth::user();
@@ -60,7 +79,12 @@ public function adminIndex()
         return view('rooms.create', compact('divisions'));
     }
 
-    // ADMIN: Simpan ruangan
+    /**
+     * Menyimpan data ruangan baru.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -74,7 +98,6 @@ public function adminIndex()
             'division_id'  => 'required|exists:divisions,id',
         ]);
 
-        // Cegah admin membuat ruangan untuk divisi lain
         if ($user->role !== 'super_admin' && $validated['division_id'] != $user->division_id) {
             abort(403, 'Anda tidak boleh menambah ruangan untuk divisi lain.');
         }
@@ -84,7 +107,12 @@ public function adminIndex()
         return redirect()->route('admin.rooms')->with('success', 'Ruangan berhasil ditambahkan.');
     }
 
-    // ADMIN: Form edit ruangan
+    /**
+     * Menampilkan form untuk mengedit ruangan.
+     *
+     * @param Room $room
+     * @return \Illuminate\Contracts\View\View
+     */
     public function edit(Room $room)
     {
         $user = Auth::user();
@@ -100,7 +128,13 @@ public function adminIndex()
         return view('rooms.edit', compact('room', 'divisions'));
     }
 
-    // ADMIN: Update ruangan
+    /**
+     * Memproses pembaruan data ruangan.
+     *
+     * @param Request $request
+     * @param Room $room
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Room $room)
     {
         $user = Auth::user();
@@ -127,7 +161,12 @@ public function adminIndex()
         return redirect()->route('admin.rooms')->with('success', 'Ruangan berhasil diperbarui.');
     }
 
-    // ADMIN: Hapus ruangan
+    /**
+     * Menghapus ruangan dari database.
+     *
+     * @param Room $room
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Room $room)
     {
         $user = Auth::user();
@@ -141,7 +180,12 @@ public function adminIndex()
         return redirect()->route('admin.rooms')->with('success', 'Ruangan berhasil dihapus.');
     }
 
-    // JSON API untuk ambil ruangan berdasarkan division
+    /**
+     * Mengembalikan daftar ruangan dalam format JSON berdasarkan ID divisi.
+     *
+     * @param int $id ID dari divisi.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getByDivision($id)
     {
         $rooms = Room::where('division_id', $id)
@@ -151,7 +195,12 @@ public function adminIndex()
         return response()->json($rooms);
     }
 
-    // Form filter (digunakan di tempat lain jika perlu)
+    /**
+     * Menampilkan form filter ruangan berdasarkan divisi.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
     public function filterByDivision(Request $request)
     {
         $divisions = Division::all();
