@@ -114,12 +114,12 @@ Route::get('/bookings/rekap/pdf-all', [BookingController::class, 'rekapSemua'])-
 | API
 |--------------------------------------------------------------------------
 */
-// Route::get('/api/rooms/by-division/{divisionId}', function ($divisionId) {
-//     return \App\Models\Room::where('division_id', $divisionId)
-//         ->where('is_available', true)
-//         ->select('id', 'name', 'capacity')
-//         ->get();
-// })->middleware('auth')->name('api.rooms.byDivision');
+Route::get('/api/rooms/by-division/{divisionId}', function ($divisionId) {
+    return \App\Models\Room::where('division_id', $divisionId)
+        ->where('is_available', true)
+        ->select('id', 'name', 'capacity')
+        ->get();
+})->middleware('auth')->name('api.rooms.byDivision');
 
 /*
 |--------------------------------------------------------------------------
