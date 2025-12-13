@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="
-    background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
+    background: url('/assets/Gemini_Generated_Image_apy2pfapy2pfapy2.png') no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
     display: flex;

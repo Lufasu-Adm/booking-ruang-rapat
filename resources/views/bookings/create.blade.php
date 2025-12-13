@@ -14,7 +14,7 @@
 </head>
 <body class="booking-create-page">
 
-    <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
+    <div class="page-wrapper" style="background-image: url('/assets/Gemini_Generated_Image_apy2pfapy2pfapy2.png');">
         
         <nav class="navbar">
             @auth

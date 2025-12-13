@@ -43,19 +43,20 @@
             {{-- Form group untuk nama divisi --}}
             <div class="form-group">
                 <label for="name">Nama Divisi</label>
-                <input type="text" name="name" id="name" required value="{{ old('name') }}">
+                <input type="text" name="name" id="name" required value="{{ old('name') }}" placeholder="Contoh: Divisi Keuangan">
             </div>
 
             {{-- Form group untuk nama admin --}}
             <div class="form-group">
                 <label for="admin_name">Nama Admin</label>
-                <input type="text" name="admin_name" id="admin_name" required value="{{ old('admin_name') }}">
+                <input type="text" name="admin_name" id="admin_name" required value="{{ old('admin_name') }}" placeholder="Contoh: Admin Keuangan">
             </div>
 
-            {{-- Form group untuk email admin --}}
+            {{-- Form group untuk email/username admin --}}
+            {{-- PERBAIKAN: type="text" agar bisa input username biasa (tanpa @gmail.com) --}}
             <div class="form-group">
-                <label for="admin_email">Email Admin</label>
-                <input type="email" name="admin_email" id="admin_email" required value="{{ old('admin_email') }}">
+                <label for="admin_email">Email / Username Login</label>
+                <input type="text" name="admin_email" id="admin_email" required value="{{ old('admin_email') }}" placeholder="Contoh: keuangan (tanpa @gmail.com)">
             </div>
             
             {{-- Tombol submit form --}}

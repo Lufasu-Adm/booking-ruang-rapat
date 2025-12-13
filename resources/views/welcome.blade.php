@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
             overflow-y: auto;
-            background: url('/assets/ai-generated-boat-picture.jpg') no-repeat center center fixed;
+            background: url('/assets/Gemini_Generated_Image_apy2pfapy2pfapy2.png') no-repeat center center fixed;
             background-size: cover;
             font-family: sans-serif;
             color: white; /* Warna default teks */

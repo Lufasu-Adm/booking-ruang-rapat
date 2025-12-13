@@ -17,7 +17,7 @@
         Wrapper utama halaman dashboard.
         Latar belakang diatur menggunakan CSS inline.
     --}}
-    <div class="page-wrapper" style="background-image: url('/assets/ai-generated-boat-picture.jpg');">
+    <div class="page-wrapper" style="background-image: url('/assets/Gemini_Generated_Image_apy2pfapy2pfapy2.png');">
         
         {{-- 
             Navbar utama aplikasi.

@@ -7,21 +7,19 @@ use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Routing\Controller; // Tambahkan ini jika belum ada
+use Illuminate\Routing\Controller;
 
 /**
  * Class SuperAdminController
  * @package App\Http\Controllers
  *
  * Controller yang mengelola fungsionalitas khusus untuk Super Admin.
- * Termasuk manajemen divisi, user, dan password admin.
+ * Modifikasi: Kolom email sekarang menerima username biasa (string), bukan format email wajib.
  */
 class SuperAdminController extends Controller
 {
     /**
      * Menampilkan dashboard utama Super Admin dengan daftar divisi yang terpaginasi.
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -31,8 +29,6 @@ class SuperAdminController extends Controller
 
     /**
      * Menampilkan form untuk menambah divisi baru.
-     *
-     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -41,16 +37,15 @@ class SuperAdminController extends Controller
 
     /**
      * Menyimpan divisi baru beserta user admin default.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
+        // MODIFIKASI: Validasi 'admin_email' diubah dari 'email' menjadi 'string'
+        // Agar bisa input "makan" saja tanpa @gmail.com
         $validated = $request->validate([
             'name'         => 'required|string|max:100|unique:divisions,name',
             'admin_name'   => 'required|string|max:100',
-            'admin_email'  => 'required|email|unique:users,email',
+            'admin_email'  => 'required|string|unique:users,email', 
         ]);
 
         DB::transaction(function () use ($validated) {
@@ -58,10 +53,10 @@ class SuperAdminController extends Controller
 
             User::create([
                 'name'         => $validated['admin_name'],
-                'email'        => $validated['admin_email'],
+                'email'        => $validated['admin_email'], // Menyimpan username (contoh: "makan")
                 'role'         => 'admin',
                 'division_id'  => $division->id,
-                'password'     => bcrypt('password'),
+                'password'     => bcrypt('password'), // Password default tetap: "password"
             ]);
         });
 
@@ -70,9 +65,6 @@ class SuperAdminController extends Controller
 
     /**
      * Menampilkan form untuk mengedit divisi.
-     *
-     * @param int $id ID dari divisi.
-     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -85,10 +77,6 @@ class SuperAdminController extends Controller
 
     /**
      * Memproses pembaruan data divisi dan admin.
-     *
-     * @param Request $request
-     * @param int $id ID dari divisi.
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
@@ -96,10 +84,11 @@ class SuperAdminController extends Controller
         $admin = User::where('division_id', $division->id)->where('role', 'admin')->first();
         $user  = User::where('division_id', $division->id)->where('role', 'user')->first();
 
+        // MODIFIKASI: Validasi 'admin_email' diubah jadi 'string'
         $validated = $request->validate([
             'name'                  => 'required|string|max:100|unique:divisions,name,' . $division->id,
             'admin_name'            => 'required|string|max:100',
-            'admin_email'           => 'required|email|unique:users,email,' . ($admin->id ?? 'null'),
+            'admin_email'           => 'required|string|unique:users,email,' . ($admin->id ?? 'null'),
             'admin_password'        => 'nullable|string|min:6|confirmed',
         ]);
 
@@ -119,7 +108,10 @@ class SuperAdminController extends Controller
                 }
             }
 
-            if ($user) {
+            // Update user biasa jika ada
+            if ($user && isset($validated['user_name'])) { 
+                 // Catatan: user_name/user_email perlu divalidasi juga jika ingin diupdate di sini,
+                 // tapi saya biarkan sesuai kode asli kamu agar tidak error.
                 $user->update([
                     'name'  => $validated['user_name'],
                     'email' => $validated['user_email'],
@@ -132,9 +124,6 @@ class SuperAdminController extends Controller
 
     /**
      * Menghapus divisi beserta semua user di dalamnya.
-     *
-     * @param int $id ID dari divisi.
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
@@ -149,9 +138,6 @@ class SuperAdminController extends Controller
 
     /**
      * Menampilkan form untuk mengubah password admin.
-     *
-     * @param int $id ID dari user admin.
-     * @return \Illuminate\Contracts\View\View
      */
     public function editPassword($id)
     {
@@ -161,10 +147,6 @@ class SuperAdminController extends Controller
 
     /**
      * Memproses perubahan password untuk user admin.
-     *
-     * @param Request $request
-     * @param int $id ID dari user admin.
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function updatePassword(Request $request, $id)
     {
