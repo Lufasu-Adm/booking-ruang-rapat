@@ -114,4 +114,4 @@ Anda dapat menggunakan akun berikut untuk menguji coba aplikasi (pastikan Anda s
     * **Password**: `password`
 
 ---
-Dibuat dengan ❤️ oleh **Lufasu-Adm**.
+Dibuat oleh **Lufasu-Adm**.
