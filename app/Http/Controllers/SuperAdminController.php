@@ -41,7 +41,6 @@ class SuperAdminController extends Controller
     public function store(Request $request)
     {
         // MODIFIKASI: Validasi 'admin_email' diubah dari 'email' menjadi 'string'
-        // Agar bisa input "makan" saja tanpa @gmail.com
         $validated = $request->validate([
             'name'         => 'required|string|max:100|unique:divisions,name',
             'admin_name'   => 'required|string|max:100',
@@ -53,10 +52,10 @@ class SuperAdminController extends Controller
 
             User::create([
                 'name'         => $validated['admin_name'],
-                'email'        => $validated['admin_email'], // Menyimpan username (contoh: "makan")
+                'email'        => $validated['admin_email'], 
                 'role'         => 'admin',
                 'division_id'  => $division->id,
-                'password'     => bcrypt('password'), // Password default tetap: "password"
+                'password'     => bcrypt('password'), 
             ]);
         });
 
@@ -110,8 +109,6 @@ class SuperAdminController extends Controller
 
             // Update user biasa jika ada
             if ($user && isset($validated['user_name'])) { 
-                 // Catatan: user_name/user_email perlu divalidasi juga jika ingin diupdate di sini,
-                 // tapi saya biarkan sesuai kode asli kamu agar tidak error.
                 $user->update([
                     'name'  => $validated['user_name'],
                     'email' => $validated['user_email'],
