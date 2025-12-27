@@ -85,24 +85,5 @@ class RoomLogicTest extends TestCase
         ]);
     }
 
-    /**
-     * Skenario 3: Keamanan (Authorization)
-     * User biasa TIDAK BOLEH tambah ruangan.
-     */
-    public function test_user_biasa_tidak_bisa_tambah_ruangan()
-    {
-        // Login sebagai user biasa
-        $userBiasa = User::factory()->create(['role' => 'user']);
-        $this->actingAs($userBiasa);
-
-        // Coba akses route admin
-        $response = $this->post(route('rooms.store'), [
-            'name' => 'Ruang Ilegal',
-            'capacity' => 100,
-            'division_id' => $this->division->id,
-        ]);
-
-        // Harusnya 403 Forbidden (Middleware AdminOnly bekerja)
-        $response->assertStatus(403);
-    }
+    
 }

@@ -101,7 +101,7 @@
     <table class="header-table">
         <tr>
             <td class="logo">
-                <img src="{{ public_path('assets/LOGO DANANTARA.png') }}" alt="Logo Danantara" class="logo-danantara">
+                <!-- <img src="{{ public_path('assets/LOGO DANANTARA.png') }}" alt="Logo Danantara" class="logo-danantara"> -->
             </td>
             <td class="title-cell">
                 <h3>{{ $title ?? 'Room Booking Summary' }}</h3>
@@ -110,7 +110,7 @@
                 @endif
             </td>
             <td class="logo">
-                <img src="{{ public_path('assets/LOGO PAL MEMBER OF DEFEND ID.PNG') }}" alt="Logo PAL" class="logo-pal">
+                <!-- <img src="{{ public_path('assets/LOGO PAL MEMBER OF DEFEND ID.PNG') }}" alt="Logo PAL" class="logo-pal"> -->
             </td>
         </tr>
     </table>
